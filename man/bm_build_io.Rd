@@ -2,32 +2,26 @@
 % Please edit documentation in R/bm_io.R
 \name{bm_build_io}
 \alias{bm_build_io}
-\title{Build bm_io object from MRIO core blocks}
+\title{Build a BM-style IO object}
 \usage{
 bm_build_io(Z, Y, VA, X, countries, sectors)
 }
 \arguments{
-\item{Z}{Intermediate input matrix (GN x GN).
-Rows are supplying country–sector combinations.
-Columns are using country–sector combinations.}
+\item{Z}{GN x GN intermediate-use matrix}
 
-\item{Y}{Final demand matrix (GN x G).
-Rows are producing country–sector combinations.
-Columns are destination countries.}
+\item{Y}{GN x G  final demand by destination country}
 
-\item{VA}{Value added vector (length GN).
-Same row order as Z.}
+\item{VA}{length-GN vector of value added}
 
-\item{X}{Gross output vector (length GN).
-Same row order as Z.}
+\item{X}{length-GN vector of gross output}
 
-\item{countries}{Character vector of country names (length G).}
+\item{countries}{character vector of country codes/names (length G)}
 
-\item{sectors}{Character vector of sector names (length N).}
+\item{sectors}{character vector of sector codes/names (length N)}
 }
 \value{
-An object of class "bm_io" containing IO matrices and helpers.
+A list of IO objects and metadata used by bmGVC
 }
 \description{
-Build bm_io object from MRIO core blocks
+Build a BM-style IO object
 }
