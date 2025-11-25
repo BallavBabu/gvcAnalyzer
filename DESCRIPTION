@@ -2,35 +2,40 @@ Package: gvcAnalyzer
 Type: Package
 Title: Global Value Chain Decomposition for Value-Added Trade
 Version: 0.1.0
-Author: Lila Ballav Bhusal [aut, cre], Alessandro Borin [ctb], Michele Mancini [ctb]
-Maintainer: Lila Ballav Bhusal <krish.bhula@gmail.com>
 Authors@R: c(
     person("Lila Ballav", "Bhusal",
-           email = "krish.bhula@gmail.com",
-           role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-8934-8841")),
+      email = "krish.bhula@gmail.com",
+      role = c("aut", "cre"),
+      comment = c(ORCID = "0000-0002-8934-8841")),
     person("Alessandro", "Borin",
-           role = "ctb",
-           comment = "Methodology: Measuring what matters in value-added trade"),
+      role = "ctb",
+      comment = "Methodology: Borin and Mancini (2023); Borin, Mancini and Taglioni (2025)"),
     person("Michele", "Mancini",
-           role = "ctb",
-           comment = "Methodology: Measuring what matters in value-added trade")
-    )
+      role = "ctb",
+      comment = "Methodology: Borin and Mancini (2023); Borin, Mancini and Taglioni (2025)"),
+    person("Daria", "Taglioni",
+      role = "ctb",
+      comment = "Methodology: Borin, Mancini and Taglioni (2025)"))
 Description: Tools for decomposing global value chain (GVC) participation and
-    value-added trade using the frameworks developed by Borin and Mancini.
-    Implements measures and decompositions consistent with
+    value-added trade using the frameworks proposed in Borin and Mancini
     "Measuring what matters in value-added trade"
     (Economic Systems Research, 35(4), 586-613, 2023,
-    <doi:10.1080/09535314.2022.2153221>).
+    10.1080/09535314.2022.2153221>) and in Borin, Mancini and
+    Taglioni "Economic Consequences of Trade and Global Value Chain
+    Integration: A Measurement Perspective" (The World Bank Economic
+    Review, 2025, 10.1093/wber/lhaf017>). The package provides
+    functions to compute value-added trade measures and decompositions
+    that follow these frameworks.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 4.0.0)
-Imports:
+Depends: 
+    R (>= 4.0.0)
+Imports: 
     Matrix,
     methods,
     stats
-Suggests:
+Suggests: 
     knitr,
     rmarkdown,
     testthat

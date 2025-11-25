@@ -1,0 +1,43 @@
+citHeader("To cite gvcAnalyzer in publications, please use the following references.")
+
+## 1. The package itself
+bibentry(
+  bibtype = "Manual",
+  title   = "gvcAnalyzer: Global Value Chain Decomposition for Value-Added Trade",
+  author  = person("Lila Ballav", "Bhusal"),
+  year    = "2025",
+  note    = "R package version 0.1.0",
+  key     = "gvcAnalyzer-package"
+)
+
+## 2. Borin & Mancini (2023)
+bibentry(
+  bibtype = "Article",
+  title   = "Measuring what matters in value-added trade",
+  author  = c(
+    person("Alessandro", "Borin"),
+    person("Michele", "Mancini")
+  ),
+  year    = "2023",
+  journal = "Economic Systems Research",
+  volume  = "35",
+  number  = "4",
+  pages   = "586-613",
+  doi     = "10.1080/09535314.2022.2153221",
+  key     = "BorinMancini2023"
+)
+
+## 3. Borin, Mancini & Taglioni (2025)
+bibentry(
+  bibtype = "Article",
+  title   = "Economic Consequences of Trade and Global Value Chain Integration: A Measurement Perspective",
+  author  = c(
+    person("Alessandro", "Borin"),
+    person("Michele", "Mancini"),
+    person("Daria", "Taglioni")
+  ),
+  year    = "2025",
+  journal = "The World Bank Economic Review",
+  doi     = "10.1093/wber/lhaf017",
+  key     = "BorinManciniTaglioni2025"
+)
