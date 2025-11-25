@@ -325,6 +325,14 @@ This vignette demonstrated:
 
 ## Key Takeaways
 
+An additional consistency property of the BM 2025 output-based
+framework is that, at the world level, pure-forward and pure-backward
+GVC output are equal when summed over all countries
+(`sum(GVC_PF_X) = sum(GVC_PB_X)`). This mirrors the global balance
+between upstream and downstream roles in value-added terms.
+
+
+
 - BM 2023 focuses on **border-crossing flows**; BM 2025 on **production structure**
 - Differences arise from domestic use of GVC inputs and export destination composition
 - **Trade-based measures** are ideal for export competitiveness and trade policy

@@ -16,16 +16,16 @@ bm_2023_bilateral_pure(io, s, r)
 \value{
 A data frame with one row for the pair (s,r):
 \itemize{
-\item \code{DVA_star_sr} Domestic VA of s in bilateral exports \eqn{e_{sr}},
-when only the \eqn{A_{sr}} block is cut.
-\item \code{DDC_star_sr} Double-counting term for s in \eqn{e_{sr}}.
-\item \code{FVA_star_sr} Foreign VA in \eqn{e_{sr}}.
-\item \code{FDC_star_sr} Foreign double-counting in \eqn{e_{sr}}.
-\item \code{EX_sr}       Gross exports \eqn{e_{sr}} (scalar).
+\item \code{DVA_star_sr} Domestic VA of s in bilateral exports e_{sr},
+when only the A_{sr} block is cut.
+\item \code{DDC_star_sr} Double-counting term for s in e_{sr}.
+\item \code{FVA_star_sr} Foreign VA in e_{sr}.
+\item \code{FDC_star_sr} Foreign double-counting in e_{sr}.
+\item \code{EX_sr}       Gross exports e_{sr} (scalar).
 }
 }
 \description{
 Implements the /sr-based decomposition:
-\deqn{u_N \times e_{sr} = DVA\_star\_sr + DDC\_star\_sr + FVA\_star\_sr + FDC\_star\_sr}
-where \eqn{A^{/sr}} zeros only the bilateral intermediate block \eqn{A_{sr}}.
+u_N × e_{sr} = DVA_star_sr + DDC_star_sr + FVA_star_sr + FDC_star_sr
+where A^/sr zeros only the bilateral intermediate block A_{sr}.
 }

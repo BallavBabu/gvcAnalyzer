@@ -1,171 +1,117 @@
 # R/bm_2025_output_sector.R
 #
-# BM 2025 output indicators at country × sector level.
-# This extends the country-level BM 2025 output decomposition
-# by allocating each country's BM 2025 components to sectors
-# in proportion to sectoral gross output X_{si}.
-#
-# This preserves country totals from bm_2025_output_components(io).
+# BM 2025 output indicators at country x sector level.
+# FIXED: Calculates GVC components directly at the sectoral level (Ground-Up).
+# This ensures sectors have different GVC intensities.
 
 #' BM 2025 output components by country and sector
-#'
-#' This function extends \code{bm_2025_output_components()} to the
-#' country–sector level. For each country \eqn{s} and sector \eqn{i},
-#' it allocates the country-level BM 2025 output components
-#' (DomX, TradX, GVC_PF_X, GVC_PB_X, GVC_TSImp, GVC_TSDom, GVC_TS_X, GVC_X)
-#' in proportion to the sector's share in total gross output:
-#'
-#' \deqn{
-#'   \theta_{si} = X_{si} / \sum_{j} X_{sj},
-#' }
-#'
-#' and
-#'
-#' \deqn{
-#'   \mathrm{DomX}_{si}    = \theta_{si} \cdot \mathrm{DomX}_s, \quad
-#'   \mathrm{TradX}_{si}   = \theta_{si} \cdot \mathrm{TradX}_s, \quad
-#'   \mathrm{GVC\_PF\_X}_{si}  = \theta_{si} \cdot \mathrm{GVC\_PF\_X}_s,
-#' }
-#'
-#' etc. This ensures that for each country \eqn{s}:
-#'
-#' \deqn{
-#'   \sum_i \mathrm{DomX}_{si}    = \mathrm{DomX}_s, \quad
-#'   \sum_i \mathrm{TradX}_{si}   = \mathrm{TradX}_s, \quad
-#'   \sum_i \mathrm{GVC\_PF\_X}_{si} = \mathrm{GVC\\_PF\_X}_s,
-#' }
-#'
-#' and similarly for the other BM 2025 components.
-#'
-#' @param io A \code{bm_io} object created by \code{bm_build_io()}.
-#'
-#' @return A data frame with one row per country–sector, containing:
-#'   \itemize{
-#'     \item \code{country}: country name
-#'     \item \code{sector}: sector name
-#'     \item \code{X_i}: sectoral gross output \eqn{X_{si}}
-#'     \item \code{DomX_i}, \code{TradX_i}
-#'     \item \code{GVC_PF_Xi}, \code{GVC_PB_Xi}
-#'     \item \code{GVC_TSImp_i}, \code{GVC_TSDom_i}
-#'     \item \code{GVC_TS_Xi}, \code{GVC_Xi}
-#'   }
 #' @export
 bm_2025_output_components_sector <- function(io) {
   stopifnot(inherits(io, "bm_io"))
 
-  # country-level BM 2025 output components
-  comp_country <- bm_2025_output_components(io)
+  G <- io$G; N <- io$N; GN <- io$GN
+  A <- io$A; B <- io$B; Y <- io$Y; X <- io$X; v <- io$v
 
-  res_list <- vector("list", io$G * io$N)
-  idx <- 1L
-
-  for (g in seq_len(io$G)) {
-    c_name <- io$countries[g]
-
-    row_c <- comp_country[comp_country$country == c_name, , drop = FALSE]
-    if (nrow(row_c) != 1L) {
-      stop("bm_2025_output_components: country row not found for ", c_name)
-    }
-
-    # Sectoral outputs X_{si} for this country
-    idx_g <- bm_idx_country(io, g)
-    X_g   <- io$X[idx_g]
-    X_tot <- sum(X_g)
-
-    if (X_tot == 0) {
-      # if a country has zero total output, use equal weights
-      share <- rep(1 / io$N, io$N)
-    } else {
-      share <- X_g / X_tot
-    }
-
-    for (i in seq_len(io$N)) {
-      res_list[[idx]] <- data.frame(
-        country      = c_name,
-        sector       = io$sectors[i],
-        X_i          = X_g[i],
-        DomX_i       = row_c$DomX       * share[i],
-        TradX_i      = row_c$TradX      * share[i],
-        GVC_PF_Xi    = row_c$GVC_PF_X   * share[i],
-        GVC_PB_Xi    = row_c$GVC_PB_X   * share[i],
-        GVC_TSImp_i  = row_c$GVC_TSImp  * share[i],
-        GVC_TSDom_i  = row_c$GVC_TSDom  * share[i],
-        GVC_TS_Xi    = row_c$GVC_TS_X   * share[i],
-        GVC_Xi       = row_c$GVC_X      * share[i]
-      )
-      idx <- idx + 1L
-    }
+  # --- Pre-computations ---
+  L_list <- vector("list", G)
+  for (g in seq_len(G)) {
+    idx <- bm_idx_country(io, g)
+    A_gg <- A[idx, idx, drop = FALSE]
+    L_list[[g]] <- solve(Matrix::Diagonal(N) - A_gg)
   }
 
-  out <- do.call(rbind, res_list)
-  rownames(out) <- NULL
-  out
+  Xexp_list <- vector("list", G)
+  for (r in seq_len(G)) {
+    idx_r <- bm_idx_country(io, r)
+    # Total Exports of r (Intermediate + Final) to all other countries
+    int_exp <- rowSums(io$Z[idx_r, setdiff(seq_len(GN), idx_r), drop = FALSE])
+    fin_exp <- rowSums(io$Y[idx_r, setdiff(seq_len(G), r), drop = FALSE])
+    e_r_star <- int_exp + fin_exp
+
+    # Use Domestic Leontief (L_rr) for Export-Related Output
+    L_rr <- L_list[[r]]
+    Xexp_list[[r]] <- as.numeric(L_rr %*% e_r_star)
+  }
+
+  res_list <- vector("list", G)
+
+  for (s in seq_len(G)) {
+    idx_s <- bm_idx_country(io, s)
+    v_s_vec <- v[idx_s]; X_s_vec <- X[idx_s]
+    L_ss    <- L_list[[s]]; A_ss <- A[idx_s, idx_s, drop = FALSE]
+    Y_ss    <- Y[idx_s, s]; Y_s_tot <- rowSums(Y[idx_s, , drop = FALSE])
+
+    # 1. PURE FORWARD (PF)
+    q_total <- numeric(N)
+    for (r in seq_len(G)) {
+      if (r == s) next
+      idx_r  <- bm_idx_country(io, r)
+      A_sr   <- A[idx_s, idx_r, drop = FALSE]
+      Xexp_r <- Xexp_list[[r]]
+
+      inner   <- A_sr %*% Xexp_r
+      inner_u <- A_ss %*% (L_ss %*% inner)
+      q_total <- q_total + as.numeric(inner + inner_u)
+    }
+    # FIXED: Calculate specific PF for each sector
+    PF_vec <- v_s_vec * q_total
+
+    # 2. PURE BACKWARD (PB)
+    fva_intensity_total <- numeric(N)
+    fva_intensity_1border <- numeric(N)
+
+    for (j in seq_len(G)) {
+      if (j == s) next
+      idx_j <- bm_idx_country(io, j)
+      v_j   <- v[idx_j]
+      B_js <- B[idx_j, idx_s, drop = FALSE]
+      fva_intensity_total <- fva_intensity_total + as.numeric(t(v_j) %*% B_js)
+
+      L_jj <- L_list[[j]]; A_js <- A[idx_j, idx_s, drop = FALSE]
+      term_1b <- as.numeric(t(v_j) %*% L_jj %*% A_js %*% L_ss)
+      fva_intensity_1border <- fva_intensity_1border + term_1b
+    }
+    # FIXED: Calculate specific PB for each sector based on its Final Demand
+    PB_vec <- (fva_intensity_total * Y_s_tot) - (fva_intensity_1border * Y_ss)
+
+    # 3. Two-Sided (TS)
+    # TS_Imp
+    TS_Imp_vec <- (fva_intensity_total * X_s_vec) - (fva_intensity_1border * Y_ss) - PB_vec
+    TS_Imp_vec[TS_Imp_vec < 0] <- 0
+
+    # TS_Dom
+    term_dom <- A_ss %*% q_total
+    TS_Dom_vec <- v_s_vec * as.numeric(L_ss %*% term_dom)
+
+    TS_vec <- TS_Imp_vec + TS_Dom_vec
+    GVC_vec <- PF_vec + PB_vec + TS_vec
+
+    # 4. Residuals
+    DomX_vec <- v_s_vec * as.numeric(L_ss %*% Y_ss)
+    TradX_vec <- X_s_vec - DomX_vec - GVC_vec
+
+    res_list[[s]] <- data.frame(
+      country      = rep(io$countries[s], N), sector = io$sectors,
+      X_i          = as.numeric(X_s_vec), DomX_i = as.numeric(DomX_vec),
+      TradX_i      = as.numeric(TradX_vec), GVC_PF_Xi = as.numeric(PF_vec),
+      GVC_PB_Xi    = as.numeric(PB_vec), GVC_TSImp_i = as.numeric(TS_Imp_vec),
+      GVC_TSDom_i  = as.numeric(TS_Dom_vec), GVC_TS_Xi = as.numeric(TS_vec),
+      GVC_Xi       = as.numeric(GVC_vec)
+    )
+  }
+  do.call(rbind, res_list)
 }
 
 #' BM 2025 output participation measures by country and sector
-#'
-#' Based on \code{bm_2025_output_components_sector()}, this function computes
-#' sector-level BM 2025 participation measures:
-#'
-#' \deqn{
-#'   \mathrm{share\_GVC\_output}_{si} = \mathrm{GVC\_X}_{si} / X_{si},
-#' }
-#'
-#' \deqn{
-#'   \mathrm{share\_PF\_output}_{si} = \mathrm{GVC\_PF\_X}_{si} / \mathrm{GVC\_X}_{si},
-#' }
-#'
-#' \deqn{
-#'   \mathrm{share\_TS\_output}_{si} = \mathrm{GVC\_TS\_X}_{si} / \mathrm{GVC\_X}_{si},
-#' }
-#'
-#' \deqn{
-#'   \mathrm{share\_PB\_output}_{si} = \mathrm{GVC\_PB\_X}_{si} / \mathrm{GVC\_X}_{si},
-#' }
-#'
-#' and a sector-level forwardness index:
-#'
-#' \deqn{
-#'   \mathrm{forward\_output}_{si}
-#'   = \left(\mathrm{GVC\_PF\_X}_{si} - \mathrm{GVC\_PB\_X}_{si}\right)
-#'     / \mathrm{GVC\_X}_{si}.
-#' }
-#'
-#' Sectors with zero output or zero GVC-related output receive \code{NA}
-#' for the corresponding ratios.
-#'
-#' @param io A \code{bm_io} object created by \code{bm_build_io()}.
-#'
-#' @return A data frame with the columns from
-#'   \code{bm_2025_output_components_sector()} plus:
-#'   \itemize{
-#'     \item \code{share_GVC_output_i}
-#'     \item \code{share_PF_output_i}
-#'     \item \code{share_TS_output_i}
-#'     \item \code{share_PB_output_i}
-#'     \item \code{forward_output_i}
-#'   }
 #' @export
 bm_2025_output_measures_sector <- function(io) {
   stopifnot(inherits(io, "bm_io"))
-
   df <- bm_2025_output_components_sector(io)
 
-  df$share_GVC_output_i <- ifelse(df$X_i > 0,
-                                  df$GVC_Xi / df$X_i,
-                                  NA_real_)
-  df$share_PF_output_i  <- ifelse(df$GVC_Xi > 0,
-                                  df$GVC_PF_Xi / df$GVC_Xi,
-                                  NA_real_)
-  df$share_TS_output_i  <- ifelse(df$GVC_Xi > 0,
-                                  df$GVC_TS_Xi / df$GVC_Xi,
-                                  NA_real_)
-  df$share_PB_output_i  <- ifelse(df$GVC_Xi > 0,
-                                  df$GVC_PB_Xi / df$GVC_Xi,
-                                  NA_real_)
-  df$forward_output_i   <- ifelse(df$GVC_Xi > 0,
-                                  (df$GVC_PF_Xi - df$GVC_PB_Xi) / df$GVC_Xi,
-                                  NA_real_)
-
+  df$share_GVC_output_i <- ifelse(df$X_i > 0, df$GVC_Xi / df$X_i, NA_real_)
+  df$share_PF_output_i  <- ifelse(df$GVC_Xi > 0, df$GVC_PF_Xi / df$GVC_Xi, NA_real_)
+  df$share_TS_output_i  <- ifelse(df$GVC_Xi > 0, df$GVC_TS_Xi / df$GVC_Xi, NA_real_)
+  df$share_PB_output_i  <- ifelse(df$GVC_Xi > 0, df$GVC_PB_Xi / df$GVC_Xi, NA_real_)
+  df$forward_output_i   <- ifelse(df$GVC_Xi > 0, (df$GVC_PF_Xi - df$GVC_PB_Xi) / df$GVC_Xi, NA_real_)
   df
 }

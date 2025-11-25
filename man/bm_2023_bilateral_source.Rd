@@ -16,17 +16,17 @@ bm_2023_bilateral_source(io, s, r)
 \value{
 A data frame with one row for the pair (s,r):
 \itemize{
-\item \code{DVAsource_sr} Domestic value added from exporter \eqn{s} in \eqn{e_{sr}}
+\item \code{DVAsource_sr} Domestic value added from s in e_{sr}
 that never returns to s.
 \item \code{DDCsource_sr} Double-counting term from s due to
-multi-border domestic returns in \eqn{e_{sr}}.
-\item \code{FVAsource_sr} Foreign value added in \eqn{e_{sr}}.
-\item \code{FDCsource_sr} Foreign double-counting in \eqn{e_{sr}}.
-\item \code{EX_sr}        Gross exports \eqn{e_{sr}} (scalar).
+multi-border domestic returns in e_{sr}.
+\item \code{FVAsource_sr} Foreign value added in e_{sr}.
+\item \code{FDCsource_sr} Foreign double-counting in e_{sr}.
+\item \code{EX_sr}        Gross exports e_{sr} (scalar).
 }
 }
 \description{
-Decomposes gross exports \eqn{e_{sr}} (from exporter \eqn{s} to importer \eqn{r}) as
-\deqn{u_N \times e_{sr} = DVAsource\_sr + DDCsource\_sr + FVAsource\_sr + FDCsource\_sr}
+Decomposes gross exports e_{sr} (from exporter s to importer r) as
+u_N × e_{sr} = DVAsource_sr + DDCsource_sr + FVAsource_sr + FDCsource_sr
 using the exporter-based slash matrix A^/s (and B^/s).
 }

@@ -14,5 +14,5 @@ data.frame with one row per exporter-importer pair:
 exporter, importer, DVAsource_sr, DDCsource_sr, FVAsource_sr, FDCsource_sr, EX_sr
 }
 \description{
-Applies \code{bm_2023_bilateral_source()} to all ordered pairs (s,r), \eqn{s \ne r}.
+Applies \code{bm_2023_bilateral_source()} to all ordered pairs (s,r), s ≠ r.
 }

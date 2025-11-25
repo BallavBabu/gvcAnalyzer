@@ -14,5 +14,5 @@ data.frame with one row per exporter-importer pair:
 exporter, importer, DVA_star_sr, DDC_star_sr, FVA_star_sr, FDC_star_sr, EX_sr
 }
 \description{
-Applies \code{bm_2023_bilateral_pure()} to all ordered pairs (s,r), \eqn{s \ne r}.
+Applies \code{bm_2023_bilateral_pure()} to all ordered pairs (s,r), s ≠ r.
 }

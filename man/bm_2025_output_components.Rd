@@ -6,12 +6,6 @@
 \usage{
 bm_2025_output_components(io)
 }
-\arguments{
-\item{io}{bm_io object}
-}
-\value{
-data.frame with one row per country.
-}
 \description{
-Computes output-based PF/TS/PB GVC components for each country s.
+BM_2025 output-based GVC components by exporter
 }

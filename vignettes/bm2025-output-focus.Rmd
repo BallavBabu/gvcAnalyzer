@@ -73,6 +73,12 @@ Each row represents a country's production structure decomposed into:
 - **TradX**: Traditional one-crossing trade
 - **X_total**: Total gross output
 
+
+At the country level, the decomposition satisfies the identity
+`X_total = DomX + TradX + GVC_X`. At the world level, the sum of
+`GVC_PF_X` equals the sum of `GVC_PB_X`, which provides a numerical
+check on the balance between upstream and downstream GVC output.
+
 ## Example: China's Production Structure
 ```{r}
 china_row <- out_comp[out_comp$country == "China", ]

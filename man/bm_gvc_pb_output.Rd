@@ -23,7 +23,7 @@ GVC pattern.
 \details{
 This follows the BM_2025 style expression using:
 \itemize{
-\item \eqn{Y_{s}^{total} = \sum_z Y_{sz}}
+\item Y_s_total = Σ_z Y_sz
 \item Y_ss      = Y_ss
 \item A_jk, B_ks, L_jj, L_ss blocks.
 }

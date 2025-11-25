@@ -23,7 +23,7 @@ that serves r's final demand of s and r goods.
 \details{
 In your notation:
 \itemize{
-\item \code{q_s(sr)} = \eqn{L_{ss} ( y_{sr} + A_{sr} L_{rr} y_{rr} )}
-\item \code{PB_sr} = \eqn{\sum_{t \ne s} u_N A_{ts} q_s(sr)}.
+\item q_s(sr) = L_ss ( y_{sr} + A_{sr} L_{rr} y_{rr} )
+\item PB_sr = Σ_{t≠s} ( u_N A_{ts} q_s(sr) ).
 }
 }

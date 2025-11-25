@@ -23,9 +23,9 @@ to third countries (forward-plus-backward chains).
 \details{
 In your notation:
 \itemize{
-\item \code{sum_e_r_to_others} = \eqn{\sum_{j \ne r} e_{rj}}
-\item demand in s: \eqn{A_{sr} L_{rr} \sum_{j \ne r} e_{rj}}
-\item \code{q_s(ts)} = \eqn{L_{ss} A_{sr} L_{rr} \sum_{j \ne r} e_{rj}}
-\item \code{TS_sr} = \eqn{\sum_{t \ne s} u_N A_{ts} q_s(ts)}.
+\item sum_e_r_to_others = Σ_{j≠r} e_{rj}
+\item demand in s: A_{sr} L_{rr} sum_e_r_to_others
+\item q_s(ts) = L_ss A_{sr} L_{rr} sum_e_r_to_others
+\item TS_sr = Σ_{t≠s} ( u_N A_{ts} q_s(ts) ).
 }
 }

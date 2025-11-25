@@ -6,49 +6,6 @@
 \usage{
 bm_2025_output_measures_sector(io)
 }
-\arguments{
-\item{io}{A \code{bm_io} object created by \code{bm_build_io()}.}
-}
-\value{
-A data frame with the columns from
-\code{bm_2025_output_components_sector()} plus:
-\itemize{
-\item \code{share_GVC_output_i}
-\item \code{share_PF_output_i}
-\item \code{share_TS_output_i}
-\item \code{share_PB_output_i}
-\item \code{forward_output_i}
-}
-}
 \description{
-Based on \code{bm_2025_output_components_sector()}, this function computes
-sector-level BM 2025 participation measures:
-}
-\details{
-\deqn{
-  \mathrm{share\_GVC\_output}_{si} = \mathrm{GVC\_X}_{si} / X_{si},
-}
-
-\deqn{
-  \mathrm{share\_PF\_output}_{si} = \mathrm{GVC\_PF\_X}_{si} / \mathrm{GVC\_X}_{si},
-}
-
-\deqn{
-  \mathrm{share\_TS\_output}_{si} = \mathrm{GVC\_TS\_X}_{si} / \mathrm{GVC\_X}_{si},
-}
-
-\deqn{
-  \mathrm{share\_PB\_output}_{si} = \mathrm{GVC\_PB\_X}_{si} / \mathrm{GVC\_X}_{si},
-}
-
-and a sector-level forwardness index:
-
-\deqn{
-  \mathrm{forward\_output}_{si}
-  = \left(\mathrm{GVC\_PF\_X}_{si} - \mathrm{GVC\_PB\_X}_{si}\right)
-    / \mathrm{GVC\_X}_{si}.
-}
-
-Sectors with zero output or zero GVC-related output receive \code{NA}
-for the corresponding ratios.
+BM 2025 output participation measures by country and sector
 }

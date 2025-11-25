@@ -14,5 +14,5 @@ data.frame with one row per exporter-importer pair:
 exporter, importer, DVAsink_sr, DDCsink_sr, FVAsink_sr, FDCsink_sr, EX_sr
 }
 \description{
-Applies \code{bm_2023_bilateral_sink()} to all ordered pairs (s,r), \eqn{s \ne r}.
+Applies \code{bm_2023_bilateral_sink()} to all ordered pairs (s,r), s ≠ r.
 }

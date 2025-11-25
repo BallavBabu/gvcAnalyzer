@@ -15,5 +15,5 @@ exporter, importer, E_sr, DAVAX_sr, GVC_sr, GVC_PF, GVC_TS, GVC_PB.
 }
 \description{
 Applies \code{bm_2025_tripartite_trade()} to all ordered pairs
-(s,r), \eqn{s \ne r}.
+(s,r), s ≠ r.
 }

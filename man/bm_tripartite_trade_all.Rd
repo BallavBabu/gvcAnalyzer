@@ -14,5 +14,5 @@ A \code{data.frame} with one row per pair (s,r).
 }
 \description{
 Computes the BM_2025 tripartite GVC trade decomposition for all
-ordered pairs (s,r) with \eqn{s \ne r}.
+ordered pairs (s,r) with s ≠ r.
 }

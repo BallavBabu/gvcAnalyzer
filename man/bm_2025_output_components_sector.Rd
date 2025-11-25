@@ -6,48 +6,6 @@
 \usage{
 bm_2025_output_components_sector(io)
 }
-\arguments{
-\item{io}{A \code{bm_io} object created by \code{bm_build_io()}.}
-}
-\value{
-A data frame with one row per country–sector, containing:
-\itemize{
-\item \code{country}: country name
-\item \code{sector}: sector name
-\item \code{X_i}: sectoral gross output \eqn{X_{si}}
-\item \code{DomX_i}, \code{TradX_i}
-\item \code{GVC_PF_Xi}, \code{GVC_PB_Xi}
-\item \code{GVC_TSImp_i}, \code{GVC_TSDom_i}
-\item \code{GVC_TS_Xi}, \code{GVC_Xi}
-}
-}
 \description{
-This function extends \code{bm_2025_output_components()} to the
-country–sector level. For each country \eqn{s} and sector \eqn{i},
-it allocates the country-level BM 2025 output components
-(DomX, TradX, GVC_PF_X, GVC_PB_X, GVC_TSImp, GVC_TSDom, GVC_TS_X, GVC_X)
-in proportion to the sector's share in total gross output:
-}
-\details{
-\deqn{
-  \theta_{si} = X_{si} / \sum_{j} X_{sj},
-}
-
-and
-
-\deqn{
-  \mathrm{DomX}_{si}    = \theta_{si} \cdot \mathrm{DomX}_s, \quad
-  \mathrm{TradX}_{si}   = \theta_{si} \cdot \mathrm{TradX}_s, \quad
-  \mathrm{GVC\_PF\_X}_{si}  = \theta_{si} \cdot \mathrm{GVC\_PF\_X}_s,
-}
-
-etc. This ensures that for each country \eqn{s}:
-
-\deqn{
-  \sum_i \mathrm{DomX}_{si}    = \mathrm{DomX}_s, \quad
-  \sum_i \mathrm{TradX}_{si}   = \mathrm{TradX}_s, \quad
-  \sum_i \mathrm{GVC\_PF\_X}_{si} = \mathrm{GVC\\_PF\_X}_s,
-}
-
-and similarly for the other BM 2025 components.
+BM 2025 output components by country and sector
 }

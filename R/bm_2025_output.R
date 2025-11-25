@@ -1,287 +1,198 @@
 # R/bm_2025_output.R
 #
 # BM_2025 output-based GVC measures (PF/TS/PB) and indicators.
-# Self-contained: does not rely on bm_idx_country() or bm_L_list().
+# FIXED:
+#   (i) Xexp_r now uses domestic Leontief L_rr (not B_rr),
+#   (ii) PF = v_s * q_total (no extra L_ss), consistent with BMT (2021).
 
-# ------------------------------------------------------------
-# Local helpers: indices and country-level slices
-# ------------------------------------------------------------
-
+# --- Local Helpers -----------------------------------------------------------
 bm25_idx_country <- function(io, g) {
-  # g can be numeric index or country name
-  if (is.character(g)) {
-    g <- match(g, io$countries)
-  }
-  if (is.na(g) || g < 1L || g > io$G) {
-    stop("Invalid country identifier 'g' in bm25_idx_country().")
-  }
+  if (is.character(g)) g <- match(g, io$countries)
   ((g - 1L) * io$N + 1L):(g * io$N)
 }
 
-bm25_v_country <- function(io, g) {
-  idx <- bm25_idx_country(io, g)
-  io$v[idx]
-}
-
-bm25_X_country <- function(io, g) {
-  idx <- bm25_idx_country(io, g)
-  io$X[idx]
-}
-
-bm25_Y_country_prod_to_dest <- function(io, g, dest) {
-  idx <- bm25_idx_country(io, g)
-  io$Y[idx, dest]
-}
-
-bm25_Y_country_total <- function(io, g) {
-  idx <- bm25_idx_country(io, g)
-  rowSums(io$Y[idx, , drop = FALSE])
-}
-
-# Domestic Leontief matrices L_gg
 bm25_L_list <- function(io) {
-  G <- io$G
-  N <- io$N
-  A <- io$A
-
+  G <- io$G; N <- io$N; A <- io$A
   L_list <- vector("list", G)
   for (g in seq_len(G)) {
     idx_g <- bm25_idx_country(io, g)
-    A_gg  <- as.matrix(A[idx_g, idx_g, drop = FALSE])
+    A_gg  <- A[idx_g, idx_g, drop = FALSE]
     L_list[[g]] <- solve(Matrix::Diagonal(N) - A_gg)
   }
   L_list
 }
 
-# -------------------------------------------------------------------
-# Export-related output Xexp_r for each country r
-#   e_r* = intermediate exports + final exports from r to all z ≠ r
-#   Xexp_r = B_rr * e_r*
-# -------------------------------------------------------------------
 bm_2025_Xexp_list <- function(io) {
-  G     <- io$G
-  N     <- io$N
-  GN    <- io$GN
-  Z     <- io$Z
-  Y     <- io$Y
-  B_all <- io$B
+  # NOTE: Xexp_r = L_rr * sum_{k != r} E_rk  (BMT, 2021).
+  G  <- io$G
+  N  <- io$N
+  GN <- io$GN
+  A  <- io$A
 
   Xexp_list <- vector("list", G)
-
   for (r in seq_len(G)) {
-    idx_r  <- bm25_idx_country(io, r)
+    idx_r <- bm25_idx_country(io, r)
 
-    # e_r* (N-vector)
-    rows_r  <- idx_r
-    int_exp <- rowSums(
-      Z[rows_r, setdiff(seq_len(GN), idx_r), drop = FALSE]
-    )
-    fin_exp <- rowSums(
-      Y[rows_r, setdiff(seq_len(G), r), drop = FALSE]
-    )
-    e_rstar <- as.numeric(int_exp + fin_exp)   # length N
+    # Domestic Leontief for country r
+    A_rr <- A[idx_r, idx_r, drop = FALSE]
+    L_rr <- solve(Matrix::Diagonal(N) - A_rr)
 
-    # B_rr (N x N)
-    B_rr <- as.matrix(B_all[idx_r, idx_r, drop = FALSE])
+    # Exports from r to all k != r (intermediate + final)
+    int_exp <- rowSums(io$Z[idx_r, setdiff(seq_len(GN), idx_r), drop = FALSE])
+    fin_exp <- rowSums(io$Y[idx_r, setdiff(seq_len(G),  r),   drop = FALSE])
+    e_rstar <- int_exp + fin_exp
 
-    # Xexp_r (N x 1)
-    Xexp_list[[r]] <- as.numeric(B_rr %*% e_rstar)
+    Xexp_list[[r]] <- as.numeric(L_rr %*% e_rstar)
   }
-
   Xexp_list
 }
 
-# ------------------------------------------------------------
-# 3.2 Output-based PF / PB / TS components for one country s
-# ------------------------------------------------------------
-
-# 3.2.1 Pure-forward GVC-related output of s
-bm_2025_GVC_PF_X <- function(io, s, L_list, Xexp_list) {
-  if (is.character(s)) s <- match(s, io$countries)
-  G <- io$G
-  A <- io$A
-
-  idx_s <- bm25_idx_country(io, s)
-
-  v_s  <- matrix(bm25_v_country(io, s), nrow = 1)  # 1 x N
-  L_ss <- L_list[[s]]                              # N x N
-  A_ss <- as.matrix(A[idx_s, idx_s, drop = FALSE])
-
-  val <- 0
-  for (r in seq_len(G)) {
-    if (r == s) next
-    idx_r   <- bm25_idx_country(io, r)
-    A_sr    <- as.matrix(A[idx_s, idx_r, drop = FALSE])     # s->r
-    Xexp_r  <- matrix(Xexp_list[[r]], ncol = 1)             # N x 1
-
-    inner   <- A_sr %*% Xexp_r                              # N x 1
-    inner_u <- A_ss %*% (L_ss %*% inner)                    # N x 1
-
-    q_sr <- inner + inner_u                                 # N x 1
-    val  <- val + as.numeric(v_s %*% (L_ss %*% q_sr))
-  }
-  val
-}
-
-# 3.2.2 Pure-backward GVC-related output of s
-bm_2025_GVC_PB_X <- function(io, s, L_list) {
-  if (is.character(s)) s <- match(s, io$countries)
-  G <- io$G
-  A <- io$A
-  B <- io$B
-
-  Y_s_total <- matrix(bm25_Y_country_total(io, s), ncol = 1)       # N x 1
-  Y_ss      <- matrix(bm25_Y_country_prod_to_dest(io, s, s), ncol = 1)
-
-  val_first  <- 0
-  val_second <- 0
-
-  for (j in seq_len(G)) {
-    idx_j  <- bm25_idx_country(io, j)
-    v_j    <- matrix(bm25_v_country(io, j), nrow = 1)
-    L_jj   <- L_list[[j]]
-
-    # Σ_{k≠j} A_jk B_ks Y_s_total
-    term_j <- matrix(0, nrow = length(idx_j), ncol = 1)
-    for (k in seq_len(G)) {
-      if (k == j) next
-      idx_k <- bm25_idx_country(io, k)
-      A_jk  <- as.matrix(A[idx_j, idx_k, drop = FALSE])
-      B_ks  <- as.matrix(B[idx_k, bm25_idx_country(io, s), drop = FALSE])
-      term_j <- term_j + A_jk %*% (B_ks %*% Y_s_total)
-    }
-    val_first <- val_first + as.numeric(v_j %*% (L_jj %*% term_j))
-
-    # second term: j ≠ s
-    if (j != s) {
-      A_js <- as.matrix(A[idx_j, bm25_idx_country(io, s), drop = FALSE])
-      L_ss <- L_list[[s]]
-      val_second <- val_second +
-        as.numeric(v_j %*% (L_jj %*% (A_js %*% (L_ss %*% Y_ss))))
-    }
-  }
-
-  val_first - val_second
-}
-
-# 3.2.3 Two-sided GVC-related output of s, imported-input component
-bm_2025_GVC_TS_Imp_X <- function(io, s, L_list, GVC_PB_X_s) {
-  if (is.character(s)) s <- match(s, io$countries)
-  G <- io$G
-  A <- io$A
-  B <- io$B
-
-  X_s  <- matrix(bm25_X_country(io, s), ncol = 1)
-  Y_ss <- matrix(bm25_Y_country_prod_to_dest(io, s, s), ncol = 1)
-
-  val_first  <- 0
-  val_second <- 0
-
-  for (j in seq_len(G)) {
-    idx_j  <- bm25_idx_country(io, j)
-    v_j    <- matrix(bm25_v_country(io, j), nrow = 1)
-    L_jj   <- L_list[[j]]
-
-    # Σ_{k≠j} A_jk B_ks X_s
-    term_j1 <- matrix(0, nrow = length(idx_j), ncol = 1)
-    for (k in seq_len(G)) {
-      if (k == j) next
-      idx_k <- bm25_idx_country(io, k)
-      A_jk  <- as.matrix(A[idx_j, idx_k, drop = FALSE])
-      B_ks  <- as.matrix(B[idx_k, bm25_idx_country(io, s), drop = FALSE])
-      term_j1 <- term_j1 + A_jk %*% (B_ks %*% X_s)
-    }
-    val_first <- val_first + as.numeric(v_j %*% (L_jj %*% term_j1))
-
-    # second term: j ≠ s
-    if (j != s) {
-      A_js <- as.matrix(A[idx_j, bm25_idx_country(io, s), drop = FALSE])
-      L_ss <- L_list[[s]]
-      val_second <- val_second +
-        as.numeric(
-          v_j %*% (L_jj %*% (A_js %*% (L_ss %*% (L_ss %*% Y_ss))))
-        )
-    }
-  }
-
-  # Imported-input two-sided = all imported inputs in X_s
-  # minus those absorbed in "pure domestic" chains, minus pure-backward
-  val_first - val_second - GVC_PB_X_s
-}
-
-# 3.2.4 Two-sided GVC-related output of s, domestic-input component
-bm_2025_GVC_TS_Dom_X <- function(io, s, L_list, Xexp_list) {
-  if (is.character(s)) s <- match(s, io$countries)
-  G <- io$G
-  A <- io$A
-
-  idx_s <- bm25_idx_country(io, s)
-
-  v_s  <- matrix(bm25_v_country(io, s), nrow = 1)
-  L_ss <- L_list[[s]]
-  A_ss <- as.matrix(A[idx_s, idx_s, drop = FALSE])
-
-  val <- 0
-  for (r in seq_len(G)) {
-    if (r == s) next
-    idx_r   <- bm25_idx_country(io, r)
-    A_sr    <- as.matrix(A[idx_s, idx_r, drop = FALSE])
-    Xexp_r  <- matrix(Xexp_list[[r]], ncol = 1)
-    inner   <- A_sr %*% Xexp_r
-    inner2  <- A_ss %*% (L_ss %*% inner)
-    q_sr    <- inner + inner2
-    val     <- val + as.numeric(v_s %*% (L_ss %*% (A_ss %*% q_sr)))
-  }
-  val
-}
-
-# ------------------------------------------------------------
-# Aggregate for each exporter s
-# ------------------------------------------------------------
-
 #' BM_2025 output-based GVC components by exporter
-#'
-#' Computes output-based PF/TS/PB GVC components for each country s.
-#'
-#' @param io bm_io object
-#'
-#' @return data.frame with one row per country.
 #' @export
 bm_2025_output_components <- function(io) {
   stopifnot(inherits(io, "bm_io"))
-  G <- io$G
+  G <- io$G; N <- io$N
 
-  # Domestic Leontief L_gg and export-related output in each r
   L_list    <- bm25_L_list(io)
   Xexp_list <- bm_2025_Xexp_list(io)
-
   output_list <- vector("list", G)
 
   for (s in seq_len(G)) {
-    # core GVC components
-    PF_X_s <- bm_2025_GVC_PF_X(io, s, L_list, Xexp_list)
-    PB_X_s <- bm_2025_GVC_PB_X(io, s, L_list)
-    TS_imp <- bm_2025_GVC_TS_Imp_X(io, s, L_list, PB_X_s)
-    TS_dom <- bm_2025_GVC_TS_Dom_X(io, s, L_list, Xexp_list)
-    TS_X_s <- TS_imp + TS_dom
+    idx_s <- bm25_idx_country(io, s)
+
+    v_s <- io$v[idx_s]              # value-added coefficients (length N)
+    X_s <- io$X[idx_s]              # gross output by sector of s
+    L_ss <- L_list[[s]]             # domestic Leontief
+    A_ss <- io$A[idx_s, idx_s, drop = FALSE]
+
+    Y_ss    <- io$Y[idx_s, s]                     # final demand of s in s
+    Y_s_tot <- rowSums(io$Y[idx_s, , drop = FALSE])  # total final demand of s
+
+    ## 1. PURE FORWARD (PF) -----------------------------------------------
+    # q_total = Σ_{r != s} [ A_sr Xexp_r + A_ss L_ss A_sr Xexp_r ]
+    # PF_X_s  = v_s * q_total  (GVC value-added traced in output)
+    q_total <- numeric(N)
+    for (r in seq_len(G)) {
+      if (r == s) next
+      idx_r  <- bm25_idx_country(io, r)
+      A_sr   <- io$A[idx_s, idx_r, drop = FALSE]
+      Xexp_r <- Xexp_list[[r]]
+
+      inner   <- A_sr %*% Xexp_r                # A_sr Xexp_r
+      inner_u <- A_ss %*% (L_ss %*% inner)      # A_ss L_ss A_sr Xexp_r
+      q_total <- q_total + as.numeric(inner + inner_u)
+    }
+    # CORRECT: PF = value added of q_total (no extra L_ss)
+    PF_X_s <- sum(v_s * q_total)
+
+    ## 2. PURE BACKWARD (PB) ----------------------------------------------
+    # Follows BMT (2021) "GVC-output: Pure Backward" logic.
+    fva_tot <- 0
+    fva_1b  <- 0
+
+    for (j in seq_len(G)) {
+      if (j == s) {
+        # j = s contributes only to the first term (k != j restriction handled below)
+        idx_j <- bm25_idx_country(io, j)
+        v_j   <- io$v[idx_j]
+        L_jj  <- L_list[[j]]
+
+        term_j <- numeric(N)
+        for (k in seq_len(G)) {
+          if (k == j) next
+          idx_k <- bm25_idx_country(io, k)
+          A_jk  <- io$A[idx_j, idx_k, drop = FALSE]
+          B_ks  <- io$B[idx_k, idx_s, drop = FALSE]
+          term_j <- term_j + A_jk %*% (B_ks %*% Y_s_tot)
+        }
+        fva_tot <- fva_tot + as.numeric(t(v_j) %*% L_jj %*% term_j)
+      } else {
+        # j != s: contributes to both terms
+        idx_j <- bm25_idx_country(io, j)
+        v_j   <- io$v[idx_j]
+        L_jj  <- L_list[[j]]
+
+        # First term: Σ_{k != j} A_jk B_ks Y_s_tot
+        term_j <- numeric(N)
+        for (k in seq_len(G)) {
+          if (k == j) next
+          idx_k <- bm25_idx_country(io, k)
+          A_jk  <- io$A[idx_j, idx_k, drop = FALSE]
+          B_ks  <- io$B[idx_k, idx_s, drop = FALSE]
+          term_j <- term_j + A_jk %*% (B_ks %*% Y_s_tot)
+        }
+        fva_tot <- fva_tot + as.numeric(t(v_j) %*% L_jj %*% term_j)
+
+        # Second term: Σ_{j != s} V_j L_jj A_js L_ss Y_ss
+        A_js   <- io$A[idx_j, idx_s, drop = FALSE]
+        term_1b <- t(v_j) %*% L_jj %*% A_js %*% L_ss %*% Y_ss
+        fva_1b  <- fva_1b + sum(term_1b)
+      }
+    }
+    PB_X_s <- fva_tot - fva_1b
+
+    ## 3. TWO-SIDED (TS) --------------------------------------------------
+    # Imported inputs re-exported as intermediates:
+    # GVCTwoSidedImpInp_s =
+    #   Σ_j V_j L_jj Σ_{k != j} A_jk B_ks X_s
+    #   - Σ_{j != s} V_j L_jj A_js L_ss A_ss L_ss Y_ss
+    #   - GVCPureBackX_s
+    fva_X_tot <- 0
+    fva_X_1b  <- 0
+
+    for (j in seq_len(G)) {
+      if (j == s) {
+        idx_j <- bm25_idx_country(io, j)
+        v_j   <- io$v[idx_j]
+        L_jj  <- L_list[[j]]
+
+        term_j1 <- numeric(N)
+        for (k in seq_len(G)) {
+          if (k == j) next
+          idx_k <- bm25_idx_country(io, k)
+          A_jk  <- io$A[idx_j, idx_k, drop = FALSE]
+          B_ks  <- io$B[idx_k, idx_s, drop = FALSE]
+          term_j1 <- term_j1 + A_jk %*% (B_ks %*% X_s)
+        }
+        fva_X_tot <- fva_X_tot + as.numeric(t(v_j) %*% L_jj %*% term_j1)
+      } else {
+        idx_j <- bm25_idx_country(io, j)
+        v_j   <- io$v[idx_j]
+        L_jj  <- L_list[[j]]
+
+        # First term
+        term_j1 <- numeric(N)
+        for (k in seq_len(G)) {
+          if (k == j) next
+          idx_k <- bm25_idx_country(io, k)
+          A_jk  <- io$A[idx_j, idx_k, drop = FALSE]
+          B_ks  <- io$B[idx_k, idx_s, drop = FALSE]
+          term_j1 <- term_j1 + A_jk %*% (B_ks %*% X_s)
+        }
+        fva_X_tot <- fva_X_tot + as.numeric(t(v_j) %*% L_jj %*% term_j1)
+
+        # Second term for two-sided imported inputs:
+        # Σ_{j != s} V_j L_jj A_js L_ss A_ss L_ss Y_ss
+        A_js <- io$A[idx_j, idx_s, drop = FALSE]
+        term_X_1b <- t(v_j) %*% L_jj %*% A_js %*% L_ss %*% A_ss %*% L_ss %*% Y_ss
+        fva_X_1b  <- fva_X_1b + sum(term_X_1b)
+      }
+    }
+
+    TS_imp <- fva_X_tot - fva_X_1b - PB_X_s
+    if (TS_imp < 0) TS_imp <- 0
+
+    # Domestic inputs sold along GVC chains:
+    # GVCTwoSidedDomInp_s = V_s L_ss A_ss Σ_{r != s} (A_sr Xexp_r + A_ss L_ss A_sr Xexp_r)
+    term_dom <- A_ss %*% q_total
+    TS_dom   <- sum(v_s * as.numeric(L_ss %*% term_dom))
+
+    TS_X_s  <- TS_imp + TS_dom
     GVC_X_s <- PF_X_s + PB_X_s + TS_X_s
 
-    # total output of s
-    X_s_tot <- sum(bm25_X_country(io, s))
-
-    # simple domestic-output proxy (BM-style toy)
-    idx_s <- bm25_idx_country(io, s)
-    Y_ss  <- matrix(bm25_Y_country_prod_to_dest(io, s, s), ncol = 1)
-    v_s   <- matrix(bm25_v_country(io, s), nrow = 1)
-    L_ss  <- L_list[[s]]
-    A_ss  <- as.matrix(io$A[idx_s, idx_s, drop = FALSE])
-
-    DomX_s <- as.numeric(
-      v_s %*% (L_ss %*% Y_ss) +
-        v_s %*% (L_ss %*% (A_ss %*% (L_ss %*% Y_ss)))
-    )
-
-    TradX_s <- X_s_tot - DomX_s - GVC_X_s
+    ## 4. RESIDUALS --------------------------------------------------------
+    DomX_s  <- sum(v_s * as.numeric(L_ss %*% Y_ss))
+    TradX_s <- sum(X_s) - DomX_s - GVC_X_s
 
     output_list[[s]] <- data.frame(
       country   = io$countries[s],
@@ -293,38 +204,24 @@ bm_2025_output_components <- function(io) {
       GVC_X     = GVC_X_s,
       DomX      = DomX_s,
       TradX     = TradX_s,
-      X_total   = X_s_tot
+      X_total   = sum(X_s)
     )
   }
 
-  out <- do.call(rbind, output_list)
-  rownames(out) <- NULL
-  out
+  do.call(rbind, output_list)
 }
 
 #' BM_2025 output-based GVC participation indicators
-#'
-#' For each country s:
-#'  - share_GVC_output = GVC_X / X_total
-#'  - share_PF_output  = GVC_PF_X / GVC_X
-#'  - share_TS_output  = GVC_TS_X / GVC_X
-#'  - share_PB_output  = GVC_PB_X / GVC_X
-#'  - forward_output   = (GVC_PF_X - GVC_PB_X) / GVC_X
-#'
-#' @param io bm_io object
-#'
-#' @return data.frame with exporter-level output-based indicators.
 #' @export
 bm_2025_output_measures <- function(io) {
   stopifnot(inherits(io, "bm_io"))
-
   comp <- bm_2025_output_components(io)
 
-  comp$share_GVC_output <- comp$GVC_X / comp$X_total
-  comp$share_PF_output  <- comp$GVC_PF_X / comp$GVC_X
-  comp$share_TS_output  <- comp$GVC_TS_X / comp$GVC_X
-  comp$share_PB_output  <- comp$GVC_PB_X / comp$GVC_X
-  comp$forward_output   <- (comp$GVC_PF_X - comp$GVC_PB_X) / comp$GVC_X
-
+  comp$share_GVC_output <- comp$GVC_X   / comp$X_total
+  comp$share_PF_output  <- ifelse(comp$GVC_X > 0, comp$GVC_PF_X / comp$GVC_X, 0)
+  comp$share_TS_output  <- ifelse(comp$GVC_X > 0, comp$GVC_TS_X / comp$GVC_X, 0)
+  comp$share_PB_output  <- ifelse(comp$GVC_X > 0, comp$GVC_PB_X / comp$GVC_X, 0)
+  comp$forward_output   <- ifelse(comp$GVC_X > 0,
+                                  (comp$GVC_PF_X - comp$GVC_PB_X) / comp$GVC_X, 0)
   comp
 }
