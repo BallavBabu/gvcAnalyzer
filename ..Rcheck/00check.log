@@ -1,0 +1,295 @@
+* using log directory ‘/Users/ballavbabu/Desktop/gvcAnalyzer/..Rcheck’
+* using R version 4.5.1 (2025-06-13)
+* using platform: aarch64-apple-darwin20
+* R was compiled by
+    Apple clang version 16.0.0 (clang-1600.0.26.6)
+    GNU Fortran (GCC) 14.2.0
+* running under: macOS Sequoia 15.6
+* using session charset: UTF-8
+* checking for file ‘./DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘gvcAnalyzer’ version ‘0.1.0’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... WARNING
+Found the following executable file:
+  .git/objects/47/e76f7a0a50adffbfb42f90309bd6691d96e9fd
+Source packages should not contain undeclared executable files.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .DS_Store
+  .RData
+  .Rhistory
+  .gitignore
+  vignettes/.gitignore
+  ..Rcheck
+  .Rproj.user
+  .git
+These were most likely included in error. See section ‘Package
+structure’ in the ‘Writing R Extensions’ manual.
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘gvcAnalyzer’ can be installed ... WARNING
+Found the following significant warnings:
+  Note: possible error in 'bm_block(io$A, i, j, ': unused argument (io$N) at bm_tripartite_trade.R:27 
+  Note: possible error in 'bm_block(io$B, r_id, ': unused argument (N) at bm_output_gvc.R:42 
+  Note: possible error in 'bm_block(io$A, j_id, ': unused argument (N) at bm_output_gvc.R:131 
+  Note: possible error in 'bm_block(io$B, k_id, ': unused argument (N) at bm_output_gvc.R:132 
+  Note: possible error in 'bm_block(io$A, j_id, ': unused argument (N) at bm_output_gvc.R:139 
+  Note: possible error in 'bm_block(io$A, s_id, ': unused argument (N) at bm_output_gvc.R:76 
+  Note: possible error in 'bm_block(io$A, s_id, ': unused argument (N) at bm_output_gvc.R:81 
+  Note: possible error in 'bm_block(io$A, s_id, ': unused argument (N) at bm_output_gvc.R:226 
+  Note: possible error in 'bm_block(io$A, s_id, ': unused argument (N) at bm_output_gvc.R:231 
+  Note: possible error in 'bm_block(io$A, j_id, ': unused argument (N) at bm_output_gvc.R:183 
+  Note: possible error in 'bm_block(io$B, k_id, ': unused argument (N) at bm_output_gvc.R:184 
+  Note: possible error in 'bm_block(io$A, j_id, ': unused argument (N) at bm_output_gvc.R:191 
+  Note: possible error in 'bm_block(io$A, t_id, ': unused argument (N) at bm_tripartite_trade.R:107 
+  Note: possible error in 'bm_block(io$A, t_id, ': unused argument (N) at bm_tripartite_trade.R:156 
+See ‘/Users/ballavbabu/Desktop/gvcAnalyzer/..Rcheck/00install.out’ for details.
+Information on the location(s) of code generating the ‘Note’s can be
+obtained by re-running with environment variable R_KEEP_PKG_SOURCE set
+to ‘yes’.
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Checking should be performed on sources prepared by ‘R CMD build’.
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directory with the name of a check directory:
+  ./..Rcheck
+Most likely, these were included erroneously.
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... NOTE
+Namespace in Imports field not imported from: ‘utils’
+  All declared Imports should be used.
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+bm_block_io: possible error in bm_block(io$A, i, j, io$N): unused
+  argument (io$N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_tripartite_trade.R:27)
+bm_build_Xexp_list: possible error in bm_block(io$B, r_id, r_id, N):
+  unused argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_output_gvc.R:42)
+bm_gvc_pb_output: possible error in bm_block(io$A, j_id, k_id, N):
+  unused argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_output_gvc.R:131)
+bm_gvc_pb_output: possible error in bm_block(io$B, k_id, s_id, N):
+  unused argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_output_gvc.R:132)
+bm_gvc_pb_output: possible error in bm_block(io$A, j_id, s_id, N):
+  unused argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_output_gvc.R:139)
+bm_gvc_pf_output: possible error in bm_block(io$A, s_id, s_id, N):
+  unused argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_output_gvc.R:76)
+bm_gvc_pf_output: possible error in bm_block(io$A, s_id, r_id, N):
+  unused argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_output_gvc.R:81)
+bm_gvc_ts_domestic_output: possible error in bm_block(io$A, s_id, s_id,
+  N): unused argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_output_gvc.R:226)
+bm_gvc_ts_domestic_output: possible error in bm_block(io$A, s_id, r_id,
+  N): unused argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_output_gvc.R:231)
+bm_gvc_ts_import_output: possible error in bm_block(io$A, j_id, k_id,
+  N): unused argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_output_gvc.R:183)
+bm_gvc_ts_import_output: possible error in bm_block(io$B, k_id, s_id,
+  N): unused argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_output_gvc.R:184)
+bm_gvc_ts_import_output: possible error in bm_block(io$A, j_id, s_id,
+  N): unused argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_output_gvc.R:191)
+bm_pb_sr: possible error in bm_block(io$A, t_id, s_id, N): unused
+  argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_tripartite_trade.R:107)
+bm_ts_sr: possible error in bm_block(io$A, t_id, s_id, N): unused
+  argument (N)
+  (/Users/ballavbabu/Desktop/gvcAnalyzer/R/bm_tripartite_trade.R:156)
+* checking Rd files ... NOTE
+checkRd: (-1) bm_2023_bilateral_pure.Rd:29: Lost braces; missing escapes or markup?
+    29 | u_N × e_{sr} = DVA_star_sr + DDC_star_sr + FVA_star_sr + FDC_star_sr
+       |         ^
+checkRd: (-1) bm_2023_bilateral_pure.Rd:30: Lost braces; missing escapes or markup?
+    30 | where A^/sr zeros only the bilateral intermediate block A_{sr}.
+       |                                                           ^
+checkRd: (-1) bm_2023_bilateral_pure.Rd:19: Lost braces; missing escapes or markup?
+    19 | \item \code{DVA_star_sr} Domestic VA of s in bilateral exports e_{sr},
+       |                                                                  ^
+checkRd: (-1) bm_2023_bilateral_pure.Rd:20: Lost braces; missing escapes or markup?
+    20 | when only the A_{sr} block is cut.
+       |                 ^
+checkRd: (-1) bm_2023_bilateral_pure.Rd:21: Lost braces; missing escapes or markup?
+    21 | \item \code{DDC_star_sr} Double-counting term for s in e_{sr}.
+       |                                                          ^
+checkRd: (-1) bm_2023_bilateral_pure.Rd:22: Lost braces; missing escapes or markup?
+    22 | \item \code{FVA_star_sr} Foreign VA in e_{sr}.
+       |                                          ^
+checkRd: (-1) bm_2023_bilateral_pure.Rd:23: Lost braces; missing escapes or markup?
+    23 | \item \code{FDC_star_sr} Foreign double-counting in e_{sr}.
+       |                                                       ^
+checkRd: (-1) bm_2023_bilateral_pure.Rd:24: Lost braces; missing escapes or markup?
+    24 | \item \code{EX_sr}       Gross exports e_{sr} (scalar).
+       |                                          ^
+checkRd: (-1) bm_2023_bilateral_sink.Rd:29: Lost braces; missing escapes or markup?
+    29 | Decomposes gross exports e_{sr} (from exporter s to importer r) from the
+       |                            ^
+checkRd: (-1) bm_2023_bilateral_sink.Rd:33: Lost braces; missing escapes or markup?
+    33 | u_N × e_{sr} = DVAsink_sr + DDCsink_sr + FVAsink_sr + FDCsink_sr
+       |         ^
+checkRd: (-1) bm_2023_bilateral_sink.Rd:19: Lost braces; missing escapes or markup?
+    19 | \item \code{DVAsink_sr} Domestic VA of s in e_{sr} that is finally
+       |                                               ^
+checkRd: (-1) bm_2023_bilateral_sink.Rd:21: Lost braces; missing escapes or markup?
+    21 | \item \code{DDCsink_sr} Double-counting associated with s in e_{sr}
+       |                                                                ^
+checkRd: (-1) bm_2023_bilateral_sink.Rd:23: Lost braces; missing escapes or markup?
+    23 | \item \code{FVAsink_sr} Foreign VA in e_{sr} from t ≠ s.
+       |                                         ^
+checkRd: (-1) bm_2023_bilateral_sink.Rd:24: Lost braces; missing escapes or markup?
+    24 | \item \code{FDCsink_sr} Foreign double-counting in e_{sr}.
+       |                                                      ^
+checkRd: (-1) bm_2023_bilateral_sink.Rd:25: Lost braces; missing escapes or markup?
+    25 | \item \code{EX_sr}      Gross exports e_{sr} (scalar).
+       |                                         ^
+checkRd: (-1) bm_2023_bilateral_source.Rd:29: Lost braces; missing escapes or markup?
+    29 | Decomposes gross exports e_{sr} (from exporter s to importer r) as
+       |                            ^
+checkRd: (-1) bm_2023_bilateral_source.Rd:30: Lost braces; missing escapes or markup?
+    30 | u_N × e_{sr} = DVAsource_sr + DDCsource_sr + FVAsource_sr + FDCsource_sr
+       |         ^
+checkRd: (-1) bm_2023_bilateral_source.Rd:19: Lost braces; missing escapes or markup?
+    19 | \item \code{DVAsource_sr} Domestic value added from s in e_{sr}
+       |                                                            ^
+checkRd: (-1) bm_2023_bilateral_source.Rd:22: Lost braces; missing escapes or markup?
+    22 | multi-border domestic returns in e_{sr}.
+       |                                    ^
+checkRd: (-1) bm_2023_bilateral_source.Rd:23: Lost braces; missing escapes or markup?
+    23 | \item \code{FVAsource_sr} Foreign value added in e_{sr}.
+       |                                                    ^
+checkRd: (-1) bm_2023_bilateral_source.Rd:24: Lost braces; missing escapes or markup?
+    24 | \item \code{FDCsource_sr} Foreign double-counting in e_{sr}.
+       |                                                        ^
+checkRd: (-1) bm_2023_bilateral_source.Rd:25: Lost braces; missing escapes or markup?
+    25 | \item \code{EX_sr}        Gross exports e_{sr} (scalar).
+       |                                           ^
+checkRd: (-1) bm_2025_tripartite_trade.Rd:25: Lost braces; missing escapes or markup?
+    25 | E_{sr} = DAVAX_{sr} + GVC_{sr},
+       |   ^
+checkRd: (-1) bm_2025_tripartite_trade.Rd:25: Lost braces; missing escapes or markup?
+    25 | E_{sr} = DAVAX_{sr} + GVC_{sr},
+       |                ^
+checkRd: (-1) bm_2025_tripartite_trade.Rd:25: Lost braces; missing escapes or markup?
+    25 | E_{sr} = DAVAX_{sr} + GVC_{sr},
+       |                           ^
+checkRd: (-1) bm_2025_tripartite_trade.Rd:26: Lost braces; missing escapes or markup?
+    26 | GVC_{sr} = GVC_PF_{sr} + GVC_TS_{sr} + GVC_PB_{sr}.
+       |     ^
+checkRd: (-1) bm_2025_tripartite_trade.Rd:26: Lost braces; missing escapes or markup?
+    26 | GVC_{sr} = GVC_PF_{sr} + GVC_TS_{sr} + GVC_PB_{sr}.
+       |                   ^
+checkRd: (-1) bm_2025_tripartite_trade.Rd:26: Lost braces; missing escapes or markup?
+    26 | GVC_{sr} = GVC_PF_{sr} + GVC_TS_{sr} + GVC_PB_{sr}.
+       |                                 ^
+checkRd: (-1) bm_2025_tripartite_trade.Rd:26: Lost braces; missing escapes or markup?
+    26 | GVC_{sr} = GVC_PF_{sr} + GVC_TS_{sr} + GVC_PB_{sr}.
+       |                                               ^
+checkRd: (-1) bm_pb_sr.Rd:26: Lost braces; missing escapes or markup?
+    26 | \item q_s(sr) = L_ss ( y_{sr} + A_{sr} L_{rr} y_{rr} )
+       |                          ^
+checkRd: (-1) bm_pb_sr.Rd:26: Lost braces; missing escapes or markup?
+    26 | \item q_s(sr) = L_ss ( y_{sr} + A_{sr} L_{rr} y_{rr} )
+       |                                   ^
+checkRd: (-1) bm_pb_sr.Rd:26: Lost braces; missing escapes or markup?
+    26 | \item q_s(sr) = L_ss ( y_{sr} + A_{sr} L_{rr} y_{rr} )
+       |                                          ^
+checkRd: (-1) bm_pb_sr.Rd:26: Lost braces; missing escapes or markup?
+    26 | \item q_s(sr) = L_ss ( y_{sr} + A_{sr} L_{rr} y_{rr} )
+       |                                                 ^
+checkRd: (-1) bm_pb_sr.Rd:27: Lost braces; missing escapes or markup?
+    27 | \item PB_sr = Σ_{t≠s} ( u_N A_{ts} q_s(sr) ).
+       |                 ^
+checkRd: (-1) bm_pb_sr.Rd:27: Lost braces; missing escapes or markup?
+    27 | \item PB_sr = Σ_{t≠s} ( u_N A_{ts} q_s(sr) ).
+       |                               ^
+checkRd: (-1) bm_ts_sr.Rd:26: Lost braces; missing escapes or markup?
+    26 | \item sum_e_r_to_others = Σ_{j≠r} e_{rj}
+       |                             ^
+checkRd: (-1) bm_ts_sr.Rd:26: Lost braces; missing escapes or markup?
+    26 | \item sum_e_r_to_others = Σ_{j≠r} e_{rj}
+       |                                     ^
+checkRd: (-1) bm_ts_sr.Rd:27: Lost braces; missing escapes or markup?
+    27 | \item demand in s: A_{sr} L_{rr} sum_e_r_to_others
+       |                      ^
+checkRd: (-1) bm_ts_sr.Rd:27: Lost braces; missing escapes or markup?
+    27 | \item demand in s: A_{sr} L_{rr} sum_e_r_to_others
+       |                             ^
+checkRd: (-1) bm_ts_sr.Rd:28: Lost braces; missing escapes or markup?
+    28 | \item q_s(ts) = L_ss A_{sr} L_{rr} sum_e_r_to_others
+       |                        ^
+checkRd: (-1) bm_ts_sr.Rd:28: Lost braces; missing escapes or markup?
+    28 | \item q_s(ts) = L_ss A_{sr} L_{rr} sum_e_r_to_others
+       |                               ^
+checkRd: (-1) bm_ts_sr.Rd:29: Lost braces; missing escapes or markup?
+    29 | \item TS_sr = Σ_{t≠s} ( u_N A_{ts} q_s(ts) ).
+       |                 ^
+checkRd: (-1) bm_ts_sr.Rd:29: Lost braces; missing escapes or markup?
+    29 | \item TS_sr = Σ_{t≠s} ( u_N A_{ts} q_s(ts) ).
+       |                               ^
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in Rd file 'bm_country_id.Rd'
+  ‘io’ ‘country’
+
+Undocumented arguments in Rd file 'bm_sector_id.Rd'
+  ‘io’ ‘sector’
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of ‘data’ directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking LazyData ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking files in ‘vignettes’ ... WARNING
+Files in the 'vignettes' directory but no files in 'inst/doc':
+  ‘bm2023-vs-bm2025.Rmd’ ‘bm2025-output-focus.Rmd’
+  ‘gvcAnalyzer-intro.Rmd’
+* checking examples ... NONE
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes ... WARNING
+Directory 'inst/doc' does not exist.
+Package vignettes without corresponding single PDF/HTML:
+  ‘bm2023-vs-bm2025.Rmd’
+  ‘bm2025-output-focus.Rmd’
+  ‘gvcAnalyzer-intro.Rmd’
+* checking re-building of vignette outputs ... OK
+* checking PDF version of manual ... WARNING
+LaTeX errors when creating PDF version.
+This typically indicates Rd problems.
+* checking PDF version of manual without index ... ERROR
+Re-running with no redirection of stdout/stderr.
+* DONE
+Status: 1 ERROR, 7 WARNINGs, 5 NOTEs

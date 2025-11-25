@@ -16,21 +16,21 @@ bm_2023_bilateral_sink(io, s, r)
 \value{
 A data frame with one row for the pair (s,r):
 \itemize{
-\item \code{DVAsink_sr} Domestic VA of s in e_{sr} that is finally
+\item \code{DVAsink_sr} Domestic VA of exporter \eqn{s} in \eqn{e_{sr}} that is finally
 absorbed somewhere in the world as ultimate final demand.
-\item \code{DDCsink_sr} Double-counting associated with s in e_{sr}
+\item \code{DDCsink_sr} Double-counting associated with exporter \eqn{s} in \eqn{e_{sr}}
 due to the circulation of s's exports along GVC chains.
-\item \code{FVAsink_sr} Foreign VA in e_{sr} from t ≠ s.
-\item \code{FDCsink_sr} Foreign double-counting in e_{sr}.
-\item \code{EX_sr}      Gross exports e_{sr} (scalar).
+\item \code{FVAsink_sr} Foreign VA in \eqn{e_{sr}} from \eqn{t \ne s}.
+\item \code{FDCsink_sr} Foreign double-counting in \eqn{e_{sr}}.
+\item \code{EX_sr}      Gross exports \eqn{e_{sr}} (scalar).
 }
 }
 \description{
-Decomposes gross exports e_{sr} (from exporter s to importer r) from the
+Decomposes gross exports \eqn{e_{sr}} (from exporter \eqn{s} to importer \eqn{r}) from the
 importer (sink) perspective using the BM_2023 /s formulation:
 }
 \details{
-u_N × e_{sr} = DVAsink_sr + DDCsink_sr + FVAsink_sr + FDCsink_sr
+\deqn{u_N \times e_{sr} = DVAsink\_sr + DDCsink\_sr + FVAsink\_sr + FDCsink\_sr}
 
 where the split between \eqn{e^{(s/ \to y^*)}_{sr}} (ultimate shipments)
 and \eqn{e^{(\to e_s^*)}_{sr}} (re-exports of s's exports) follows

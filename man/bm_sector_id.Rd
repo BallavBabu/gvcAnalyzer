@@ -6,6 +6,11 @@
 \usage{
 bm_sector_id(io, sector)
 }
+\arguments{
+\item{io}{A bm_io object containing the MRIO data.}
+
+\item{sector}{Sector code or index used to select a sector in \code{io}.}
+}
 \description{
 Resolve a sector (name or index) to numeric index 1..N
 }

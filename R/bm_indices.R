@@ -2,6 +2,8 @@
 
 #' Resolve a country (name or index) to numeric index 1..G
 #' @export
+#' @param io A bm_io object containing the MRIO data.
+#' @param country Country code or index used to select a country in `io`.
 bm_country_id <- function(io, country) {
   if (!inherits(io, "bm_io")) stop("io must be a 'bm_io' object")
 
@@ -30,6 +32,8 @@ bm_country_id <- function(io, country) {
 
 #' Resolve a sector (name or index) to numeric index 1..N
 #' @export
+#' @param io A bm_io object containing the MRIO data.
+#' @param sector Sector code or index used to select a sector in `io`.
 bm_sector_id <- function(io, sector) {
   if (!inherits(io, "bm_io")) stop("io must be a 'bm_io' object")
 

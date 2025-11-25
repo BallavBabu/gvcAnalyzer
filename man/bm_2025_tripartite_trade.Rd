@@ -22,8 +22,8 @@ Decompose gross exports \eqn{E_{sr}} (from exporter s to importer r)
 into:
 }
 \details{
-E_{sr} = DAVAX_{sr} + GVC_{sr},
-GVC_{sr} = GVC_PF_{sr} + GVC_TS_{sr} + GVC_PB_{sr}.
+\deqn{E_{sr} = DAVAX_{sr} + GVC_{sr}}
+\deqn{GVC_{sr} = GVC\_PF_{sr} + GVC\_TS_{sr} + GVC\_PB_{sr}}
 
 This follows the BM_2025 tripartite concept:
 \itemize{

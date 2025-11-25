@@ -24,7 +24,7 @@ bm_u_N <- function(io) {
 
 # Internal: shorthand for country block
 bm_block_io <- function(io, i, j) {
-  bm_block(io$A, i, j, io$N)
+  bm_block(io$A, i, j)
 }
 
 #' DAVAX_sr: Domestic value added absorbed in final demand in r
@@ -104,7 +104,7 @@ bm_pb_sr <- function(io, s, r) {
   PB_val <- 0
   for (t_id in seq_len(G)) {
     if (t_id == s_id) next
-    A_ts <- bm_block(io$A, t_id, s_id, N)      # N x N
+    A_ts <- bm_block(io$A, t_id, s_id)      # N x N
     PB_val <- PB_val + as.numeric(uN %*% (A_ts %*% q_s))
   }
   PB_val
@@ -153,7 +153,7 @@ bm_ts_sr <- function(io, s, r) {
   TS_val <- 0
   for (t_id in seq_len(G)) {
     if (t_id == s_id) next
-    A_ts <- bm_block(io$A, t_id, s_id, N)          # N x N
+    A_ts <- bm_block(io$A, t_id, s_id)          # N x N
     TS_val <- TS_val + as.numeric(uN %*% (A_ts %*% q_s))
   }
   TS_val

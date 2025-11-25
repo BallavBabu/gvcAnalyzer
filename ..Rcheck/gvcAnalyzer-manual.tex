@@ -1,0 +1,1359 @@
+\nonstopmode{}
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\makeatletter\@ifl@t@r\fmtversion{2018/04/01}{}{\usepackage[utf8]{inputenc}}\makeatother
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `gvcAnalyzer'}}
+\par\bigskip{\large \today}
+\end{center}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {gvcAnalyzer: Global Value Chain Decomposition for Value-Added Trade}}}{}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdfauthor = {Lila Ballav Bhusal}}}{}
+\begin{description}
+\raggedright{}
+\item[Type]\AsIs{Package}
+\item[Title]\AsIs{Global Value Chain Decomposition for Value-Added Trade}
+\item[Version]\AsIs{0.1.0}
+\item[Author]\AsIs{Lila Ballav Bhusal [aut, cre], Alessandro Borin [ctb], Michele Mancini [ctb]}
+\item[Maintainer]\AsIs{Lila Ballav Bhusal }\email{krish.bhula@gmail.com}\AsIs{}
+\item[Description]\AsIs{Tools for decomposing global value chain (GVC) participation and
+value-added trade using the frameworks developed by Borin and Mancini.
+Implements measures and decompositions consistent with
+``Measuring what matters in value-added trade''
+(Economic Systems Research, 35(4), 586-613, 2023,
+<}\Rhref{https://doi.org/10.1080/09535314.2022.2153221}{doi:10.1080/09535314.2022.2153221}\AsIs{>).}
+\item[License]\AsIs{MIT + file LICENSE}
+\item[Encoding]\AsIs{UTF-8}
+\item[LazyData]\AsIs{true}
+\item[Depends]\AsIs{R (>= 4.0.0)}
+\item[Imports]\AsIs{Matrix, methods, stats, utils}
+\item[Suggests]\AsIs{knitr, rmarkdown, testthat}
+\item[VignetteBuilder]\AsIs{knitr}
+\item[Roxygen]\AsIs{list(markdown = TRUE)}
+\item[RoxygenNote]\AsIs{7.3.3}
+\end{description}
+\Rdcontents{Contents}
+\HeaderA{bm\_2023\_bilateral\_pure}{BM\_2023 pure bilateral decomposition of exports from s to r}{bm.Rul.2023.Rul.bilateral.Rul.pure}
+%
+\begin{Description}
+Implements the /sr-based decomposition:
+u\_N × e\_sr = DVA\_star\_sr + DDC\_star\_sr + FVA\_star\_sr + FDC\_star\_sr
+where A\textasciicircum{}/sr zeros only the bilateral intermediate block A\_sr.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_bilateral_pure(io, s, r)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object as returned by \code{bm\_build\_io()}
+
+\item[\code{s}] exporter (country index or code)
+
+\item[\code{r}] importer (country index or code)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A data frame with one row for the pair (s,r):
+\begin{itemize}
+
+\item{} \code{DVA\_star\_sr} Domestic VA of s in bilateral exports e\_sr,
+when only the A\_sr block is cut.
+\item{} \code{DDC\_star\_sr} Double-counting term for s in e\_sr.
+\item{} \code{FVA\_star\_sr} Foreign VA in e\_sr.
+\item{} \code{FDC\_star\_sr} Foreign double-counting in e\_sr.
+\item{} \code{EX\_sr}       Gross exports e\_sr (scalar).
+
+\end{itemize}
+
+\end{Value}
+\HeaderA{bm\_2023\_bilateral\_pure\_all}{BM\_2023 pure bilateral (/sr) decomposition for all pairs}{bm.Rul.2023.Rul.bilateral.Rul.pure.Rul.all}
+%
+\begin{Description}
+Applies \code{bm\_2023\_bilateral\_pure()} to all ordered pairs (s,r), s ≠ r.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_bilateral_pure_all(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+data.frame with one row per exporter-importer pair:
+exporter, importer, DVA\_star\_sr, DDC\_star\_sr, FVA\_star\_sr, FDC\_star\_sr, EX\_sr
+\end{Value}
+\HeaderA{bm\_2023\_bilateral\_sink}{BM\_2023 sink-based bilateral decomposition of exports from s to r}{bm.Rul.2023.Rul.bilateral.Rul.sink}
+%
+\begin{Description}
+Decomposes gross exports e\_sr (from exporter s to importer r) from the
+importer (sink) perspective using the BM\_2023 /s formulation:
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_bilateral_sink(io, s, r)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object as returned by \code{bm\_build\_io()}
+
+\item[\code{s}] exporter (country index or code, e.g. 1 or "China")
+
+\item[\code{r}] importer (country index or code, e.g. 2 or "India")
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+u\_N × e\_sr = DVAsink\_sr + DDCsink\_sr + FVAsink\_sr + FDCsink\_sr
+
+where the split between \eqn{e^{(s/ \to y^*)}_{sr}}{} (ultimate shipments)
+and \eqn{e^{(\to e_s^*)}_{sr}}{} (re-exports of s's exports) follows
+Equations (12)–(13) in BM\_2023, constructed with the exporter-based
+slash matrix A\textasciicircum{}/s (and B\textasciicircum{}/s).
+\end{Details}
+%
+\begin{Value}
+A data frame with one row for the pair (s,r):
+\begin{itemize}
+
+\item{} \code{DVAsink\_sr} Domestic VA of s in e\_sr that is finally
+absorbed somewhere in the world as ultimate final demand.
+\item{} \code{DDCsink\_sr} Double-counting associated with s in e\_sr
+due to the circulation of s's exports along GVC chains.
+\item{} \code{FVAsink\_sr} Foreign VA in e\_sr from t ≠ s.
+\item{} \code{FDCsink\_sr} Foreign double-counting in e\_sr.
+\item{} \code{EX\_sr}      Gross exports e\_sr (scalar).
+
+\end{itemize}
+
+\end{Value}
+\HeaderA{bm\_2023\_bilateral\_sink\_all}{BM\_2023 sink-based bilateral decomposition for all pairs}{bm.Rul.2023.Rul.bilateral.Rul.sink.Rul.all}
+%
+\begin{Description}
+Applies \code{bm\_2023\_bilateral\_sink()} to all ordered pairs (s,r), s ≠ r.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_bilateral_sink_all(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+data.frame with one row per exporter-importer pair:
+exporter, importer, DVAsink\_sr, DDCsink\_sr, FVAsink\_sr, FDCsink\_sr, EX\_sr
+\end{Value}
+\HeaderA{bm\_2023\_bilateral\_source}{BM\_2023 source-based bilateral decomposition of exports from s to r}{bm.Rul.2023.Rul.bilateral.Rul.source}
+%
+\begin{Description}
+Decomposes gross exports e\_sr (from exporter s to importer r) as
+u\_N × e\_sr = DVAsource\_sr + DDCsource\_sr + FVAsource\_sr + FDCsource\_sr
+using the exporter-based slash matrix A\textasciicircum{}/s (and B\textasciicircum{}/s).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_bilateral_source(io, s, r)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object as returned by \code{bm\_build\_io()}
+
+\item[\code{s}] exporter (country index or country code, e.g. 1 or "China")
+
+\item[\code{r}] importer (country index or country code, e.g. 2 or "India")
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A data frame with one row for the pair (s,r):
+\begin{itemize}
+
+\item{} \code{DVAsource\_sr} Domestic value added from s in e\_sr
+that never returns to s.
+\item{} \code{DDCsource\_sr} Double-counting term from s due to
+multi-border domestic returns in e\_sr.
+\item{} \code{FVAsource\_sr} Foreign value added in e\_sr.
+\item{} \code{FDCsource\_sr} Foreign double-counting in e\_sr.
+\item{} \code{EX\_sr}        Gross exports e\_sr (scalar).
+
+\end{itemize}
+
+\end{Value}
+\HeaderA{bm\_2023\_bilateral\_source\_all}{BM\_2023 source-based bilateral decomposition for all pairs}{bm.Rul.2023.Rul.bilateral.Rul.source.Rul.all}
+%
+\begin{Description}
+Applies \code{bm\_2023\_bilateral\_source()} to all ordered pairs (s,r), s ≠ r.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_bilateral_source_all(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+data.frame with one row per exporter-importer pair:
+exporter, importer, DVAsource\_sr, DDCsource\_sr, FVAsource\_sr, FDCsource\_sr, EX\_sr
+\end{Value}
+\HeaderA{bm\_2023\_exporter\_total}{BM\_2023 exporter-perspective decomposition of total exports of s}{bm.Rul.2023.Rul.exporter.Rul.total}
+%
+\begin{Description}
+Implements Eq. (4) at the country level:
+u\_N × e\_s* = DVA\_s* + DDC\_s* + FVA\_s* + FDC\_s*
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_exporter_total(io, s)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+
+\item[\code{s}] exporting country (index or code, e.g. 1 or "China")
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+data.frame with one row for country s
+\end{Value}
+\HeaderA{bm\_2023\_exporter\_total\_all}{BM\_2023 exporter totals for all countries}{bm.Rul.2023.Rul.exporter.Rul.total.Rul.all}
+%
+\begin{Description}
+Applies \code{bm\_2023\_exporter\_total()} to every country in the IO object.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_exporter_total_all(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+data.frame with one row per exporter:
+country, DVA\_s, DDC\_s, FVA\_s, FDC\_s, EX\_s
+\end{Value}
+\HeaderA{bm\_2023\_trade\_components}{BM\_2023 trade-based GVC components by exporter}{bm.Rul.2023.Rul.trade.Rul.components}
+%
+\begin{Description}
+Aggregates BM\_2023 tripartite GVC trade over all importers \eqn{r}{} for each exporter \eqn{s}{}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_trade_components(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+data.frame with one row per exporter and columns
+\code{GVC\_sr, GVC\_PF, GVC\_TS, GVC\_PB, E\_sr}.
+\end{Value}
+\HeaderA{bm\_2023\_trade\_measures}{BM\_2023 trade-based GVC participation measures}{bm.Rul.2023.Rul.trade.Rul.measures}
+%
+\begin{Description}
+From exporter-level GVC components, computes:
+\begin{itemize}
+
+\item{} \code{share\_GVC\_trade = GVC\_sr / E\_sr}
+\item{} \code{share\_PF\_trade  = GVC\_PF / GVC\_sr}
+\item{} \code{share\_TS\_trade  = GVC\_TS / GVC\_sr}
+\item{} \code{share\_PB\_trade  = GVC\_PB / GVC\_sr}
+\item{} \code{forward\_trade   = (GVC\_PF - GVC\_PB) / GVC\_sr}
+
+\end{itemize}
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_trade_measures(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+data.frame with exporter-level trade-based participation indicators.
+\end{Value}
+\HeaderA{bm\_2023\_tripartite\_bilateral}{BM\_2023 tripartite GVC trade for all bilateral pairs}{bm.Rul.2023.Rul.tripartite.Rul.bilateral}
+%
+\begin{Description}
+Computes BM\_2023 trade-based tripartite decomposition for all ordered pairs
+\eqn{(s,r)}{} with \eqn{s \neq r}{}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_tripartite_bilateral(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+data.frame with one row per bilateral pair.
+\end{Value}
+\HeaderA{bm\_2023\_tripartite\_pair}{BM\_2023 tripartite GVC trade decomposition for one pair (s,r)}{bm.Rul.2023.Rul.tripartite.Rul.pair}
+%
+\begin{Description}
+Computes BM\_2023 trade-based decomposition for exporter \eqn{s}{} and importer \eqn{r}{}:
+\begin{itemize}
+
+\item{} \code{E\_sr}: gross exports from \eqn{s}{} to \eqn{r}{}
+\item{} \code{DAVAX\_sr}: domestic value added from \eqn{s}{} that crosses one border
+\item{} \code{GVC\_sr}: GVC-related trade = \code{E\_sr - DAVAX\_sr}
+\item{} \code{GVC\_PF}: pure-forward GVC trade
+\item{} \code{GVC\_TS}: two-sided GVC trade
+\item{} \code{GVC\_PB}: pure-backward GVC trade
+
+\end{itemize}
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2023_tripartite_pair(io, exporter, importer)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+
+\item[\code{exporter}] exporter country (index or name)
+
+\item[\code{importer}] importer country (index or name)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+\code{exporter} and \code{importer} can be indices (1,2,...) or country names.
+\end{Details}
+%
+\begin{Value}
+data.frame with one row.
+\end{Value}
+\HeaderA{bm\_2025\_output\_components}{BM\_2025 output-based GVC components by exporter}{bm.Rul.2025.Rul.output.Rul.components}
+%
+\begin{Description}
+Computes output-based PF/TS/PB GVC components for each country s.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2025_output_components(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+data.frame with one row per country.
+\end{Value}
+\HeaderA{bm\_2025\_output\_components\_sector}{BM 2025 output components by country and sector}{bm.Rul.2025.Rul.output.Rul.components.Rul.sector}
+%
+\begin{Description}
+This function extends \code{bm\_2025\_output\_components()} to the
+country–sector level. For each country \eqn{s}{} and sector \eqn{i}{},
+it allocates the country-level BM 2025 output components
+(DomX, TradX, GVC\_PF\_X, GVC\_PB\_X, GVC\_TSImp, GVC\_TSDom, GVC\_TS\_X, GVC\_X)
+in proportion to the sector's share in total gross output:
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2025_output_components_sector(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object created by \code{bm\_build\_io()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+\deqn{
+  \theta_{si} = X_{si} / \sum_{j} X_{sj},
+}{}
+
+and
+
+\deqn{
+  \mathrm{DomX}_{si}    = \theta_{si} \cdot \mathrm{DomX}_s, \quad
+  \mathrm{TradX}_{si}   = \theta_{si} \cdot \mathrm{TradX}_s, \quad
+  \mathrm{GVC\_PF\_X}_{si}  = \theta_{si} \cdot \mathrm{GVC\_PF\_X}_s,
+}{}
+
+etc. This ensures that for each country \eqn{s}{}:
+
+\deqn{
+  \sum_i \mathrm{DomX}_{si}    = \mathrm{DomX}_s, \quad
+  \sum_i \mathrm{TradX}_{si}   = \mathrm{TradX}_s, \quad
+  \sum_i \mathrm{GVC\_PF\_X}_{si} = \mathrm{GVC\\_PF\_X}_s,
+}{}
+
+and similarly for the other BM 2025 components.
+\end{Details}
+%
+\begin{Value}
+A data frame with one row per country–sector, containing:
+\begin{itemize}
+
+\item{} \code{country}: country name
+\item{} \code{sector}: sector name
+\item{} \code{X\_i}: sectoral gross output \eqn{X_{si}}{}
+\item{} \code{DomX\_i}, \code{TradX\_i}
+\item{} \code{GVC\_PF\_Xi}, \code{GVC\_PB\_Xi}
+\item{} \code{GVC\_TSImp\_i}, \code{GVC\_TSDom\_i}
+\item{} \code{GVC\_TS\_Xi}, \code{GVC\_Xi}
+
+\end{itemize}
+
+\end{Value}
+\HeaderA{bm\_2025\_output\_measures}{BM\_2025 output-based GVC participation indicators}{bm.Rul.2025.Rul.output.Rul.measures}
+%
+\begin{Description}
+For each country s:
+\begin{itemize}
+
+\item{} share\_GVC\_output = GVC\_X / X\_total
+\item{} share\_PF\_output  = GVC\_PF\_X / GVC\_X
+\item{} share\_TS\_output  = GVC\_TS\_X / GVC\_X
+\item{} share\_PB\_output  = GVC\_PB\_X / GVC\_X
+\item{} forward\_output   = (GVC\_PF\_X - GVC\_PB\_X) / GVC\_X
+
+\end{itemize}
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2025_output_measures(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+data.frame with exporter-level output-based indicators.
+\end{Value}
+\HeaderA{bm\_2025\_output\_measures\_sector}{BM 2025 output participation measures by country and sector}{bm.Rul.2025.Rul.output.Rul.measures.Rul.sector}
+%
+\begin{Description}
+Based on \code{bm\_2025\_output\_components\_sector()}, this function computes
+sector-level BM 2025 participation measures:
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2025_output_measures_sector(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object created by \code{bm\_build\_io()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+\deqn{
+  \mathrm{share\_GVC\_output}_{si} = \mathrm{GVC\_X}_{si} / X_{si},
+}{}
+
+\deqn{
+  \mathrm{share\_PF\_output}_{si} = \mathrm{GVC\_PF\_X}_{si} / \mathrm{GVC\_X}_{si},
+}{}
+
+\deqn{
+  \mathrm{share\_TS\_output}_{si} = \mathrm{GVC\_TS\_X}_{si} / \mathrm{GVC\_X}_{si},
+}{}
+
+\deqn{
+  \mathrm{share\_PB\_output}_{si} = \mathrm{GVC\_PB\_X}_{si} / \mathrm{GVC\_X}_{si},
+}{}
+
+and a sector-level forwardness index:
+
+\deqn{
+  \mathrm{forward\_output}_{si}
+  = \left(\mathrm{GVC\_PF\_X}_{si} - \mathrm{GVC\_PB\_X}_{si}\right)
+    / \mathrm{GVC\_X}_{si}.
+}{}
+
+Sectors with zero output or zero GVC-related output receive \code{NA}
+for the corresponding ratios.
+\end{Details}
+%
+\begin{Value}
+A data frame with the columns from
+\code{bm\_2025\_output\_components\_sector()} plus:
+\begin{itemize}
+
+\item{} \code{share\_GVC\_output\_i}
+\item{} \code{share\_PF\_output\_i}
+\item{} \code{share\_TS\_output\_i}
+\item{} \code{share\_PB\_output\_i}
+\item{} \code{forward\_output\_i}
+
+\end{itemize}
+
+\end{Value}
+\HeaderA{bm\_2025\_trade\_exporter}{BM\_2025 exporter-level GVC trade totals}{bm.Rul.2025.Rul.trade.Rul.exporter}
+%
+\begin{Description}
+Aggregates BM\_2025 tripartite trade decomposition over all destinations
+for each exporter s:
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2025_trade_exporter(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+\eqn{E_s = sum_r E_{sr}}{},
+\eqn{GVC_s = sum_r GVC_{sr}}{},
+and similarly for the PF/TS/PB components.
+\end{Details}
+%
+\begin{Value}
+data.frame with one row per exporter:
+exporter, E\_s, GVC\_s, GVC\_PF\_s, GVC\_TS\_s, GVC\_PB\_s.
+\end{Value}
+\HeaderA{bm\_2025\_trade\_measures}{BM\_2025 trade-based GVC participation indicators}{bm.Rul.2025.Rul.trade.Rul.measures}
+%
+\begin{Description}
+Computes GVC participation and composition indicators for each exporter:
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2025_trade_measures(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+\begin{itemize}
+
+\item{} share\_GVC\_trade = GVC\_s / E\_s
+\item{} share\_PF\_trade  = GVC\_PF\_s / GVC\_s
+\item{} share\_TS\_trade  = GVC\_TS\_s / GVC\_s
+\item{} share\_PB\_trade  = GVC\_PB\_s / GVC\_s
+\item{} forward\_trade   = (GVC\_PF\_s - GVC\_PB\_s) / GVC\_s
+
+\end{itemize}
+
+\end{Details}
+%
+\begin{Value}
+data.frame with exporter-level totals and indicator columns.
+\end{Value}
+\HeaderA{bm\_2025\_tripartite\_trade}{BM\_2025 tripartite GVC trade decomposition for one pair (s,r)}{bm.Rul.2025.Rul.tripartite.Rul.trade}
+%
+\begin{Description}
+Decompose gross exports \eqn{E_{sr}}{} (from exporter s to importer r)
+into:
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2025_tripartite_trade(io, s, r)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+
+\item[\code{s}] exporter (country index or code, e.g. 1 or "China")
+
+\item[\code{r}] importer (country index or code, e.g. 2 or "India")
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+E\_sr = DAVAX\_sr + GVC\_sr,
+GVC\_sr = GVC\_PF\_sr + GVC\_TS\_sr + GVC\_PB\_sr.
+
+This follows the BM\_2025 tripartite concept:
+\begin{itemize}
+
+\item{} DAVAX\_sr: domestic VA of s crossing one border and absorbed
+in r's final demand (of s and r goods).
+\item{} GVC\_PB\_sr: pure backward GVC trade (import content of
+exports from s->r that stop in r's final demand).
+\item{} GVC\_TS\_sr: two-sided GVC trade (imported inputs in s used to
+produce exports from s->r that r uses to export further).
+\item{} GVC\_PF\_sr: pure forward GVC trade, as residual:
+GVC\_PF\_sr = GVC\_sr - GVC\_TS\_sr - GVC\_PB\_sr.
+
+\end{itemize}
+
+\end{Details}
+%
+\begin{Value}
+A data frame with one row for the pair (s,r):
+exporter, importer, E\_sr, DAVAX\_sr, GVC\_sr, GVC\_PF, GVC\_TS, GVC\_PB.
+\end{Value}
+\HeaderA{bm\_2025\_tripartite\_trade\_all}{BM\_2025 tripartite GVC trade decomposition for all pairs}{bm.Rul.2025.Rul.tripartite.Rul.trade.Rul.all}
+%
+\begin{Description}
+Applies \code{bm\_2025\_tripartite\_trade()} to all ordered pairs
+(s,r), s ≠ r.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_2025_tripartite_trade_all(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+data.frame with one row per exporter-importer pair:
+exporter, importer, E\_sr, DAVAX\_sr, GVC\_sr, GVC\_PF, GVC\_TS, GVC\_PB.
+\end{Value}
+\HeaderA{bm\_build\_io}{Build a bm\_io object from IO table blocks}{bm.Rul.build.Rul.io}
+%
+\begin{Description}
+Build a bm\_io object from IO table blocks
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_build_io(Z, Y, VA, X, countries, sectors)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{Z}] Intermediate demand matrix (GN x GN), rows = suppliers, cols = users.
+
+\item[\code{Y}] Final demand matrix (GN x G), columns = destination countries.
+
+\item[\code{VA}] Value added vector (length GN), in same industry order as Z rows.
+
+\item[\code{X}] Output vector (length GN), in same industry order as Z rows.
+
+\item[\code{countries}] Character vector of country names, length G.
+
+\item[\code{sectors}] Character vector of sector names, length N.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+An object of class \code{"bm\_io"} containing
+\begin{itemize}
+
+\item{} \code{Z, Y, VA, X}
+\item{} \code{countries, sectors}
+\item{} \code{G, N, GN}
+\item{} \code{A}: technical coefficients (GN x GN)
+\item{} \code{B}: Leontief inverse (GN x GN)
+\item{} \code{v}: value-added coefficients (length GN)
+
+\end{itemize}
+
+\end{Value}
+\HeaderA{bm\_country\_id}{Resolve a country (name or index) to numeric index 1..G}{bm.Rul.country.Rul.id}
+%
+\begin{Description}
+Resolve a country (name or index) to numeric index 1..G
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_country_id(io, country)
+\end{verbatim}
+\end{Usage}
+\HeaderA{bm\_davax\_sr}{DAVAX\_sr: Domestic value added absorbed in final demand in r}{bm.Rul.davax.Rul.sr}
+%
+\begin{Description}
+Implements the DAVAX component for exports from s to r in BM\_2025
+tripartite GVC trade decomposition.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_davax_sr(io, s, r)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object created by \code{bm\_build\_io()}.
+
+\item[\code{s}] Exporting country (index or name).
+
+\item[\code{r}] Importing country (index or name).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+It corresponds (in your notation) to:
+\eqn{DAVAX_{sr} = v_s L_{ss} ( y_{sr} + A_{sr} L_{rr} y_{rr} )}{}.
+\end{Details}
+%
+\begin{Value}
+Numeric scalar, DAVAX\_sr.
+\end{Value}
+\HeaderA{bm\_get\_e\_sr}{Exports from s to r by sector (intermediate + final)}{bm.Rul.get.Rul.e.Rul.sr}
+%
+\begin{Description}
+Computes a length-N vector of exports from exporter \eqn{s}{} to importer \eqn{r}{},
+summing intermediate and final exports:
+\deqn{ e_{sr} = Z_{s,r} \mathbf{u}_N + Y_{s,r} }{}
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_get_e_sr(io, exporter, importer)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+
+\item[\code{exporter}] exporter country (index or name)
+
+\item[\code{importer}] importer country (index or name)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+\code{exporter} and \code{importer} can be numeric indices or country names.
+\end{Details}
+%
+\begin{Value}
+Numeric vector of length N with sectoral exports s -> r.
+\end{Value}
+\HeaderA{bm\_get\_e\_star}{Exports from s to all foreign partners by sector (e\_s*)}{bm.Rul.get.Rul.e.Rul.star}
+%
+\begin{Description}
+Computes a length-N vector of total exports from exporter \eqn{s}{} to all
+foreign partners (intermediate + final), excluding domestic uses:
+\deqn{ e_s^* = \sum_{r \neq s} e_{sr} }{}
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_get_e_star(io, exporter)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] bm\_io object
+
+\item[\code{exporter}] exporter country (index or name)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+\code{exporter} can be numeric index or country name.
+\end{Details}
+%
+\begin{Value}
+Numeric vector of length N with sectoral exports of s to all foreign partners.
+\end{Value}
+\HeaderA{bm\_gvc\_measures\_all}{Combined trade- and output-based GVC measures}{bm.Rul.gvc.Rul.measures.Rul.all}
+%
+\begin{Description}
+Returns a list with:
+\begin{itemize}
+
+\item{} trade  : trade-based decomposition + indicators
+\item{} output : output-based decomposition + indicators
+
+\end{itemize}
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_gvc_measures_all(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A named list with components \code{trade} and \code{output}.
+\end{Value}
+\HeaderA{bm\_gvc\_output\_all}{Output-based GVC decomposition for all countries}{bm.Rul.gvc.Rul.output.Rul.all}
+%
+\begin{Description}
+Output-based GVC decomposition for all countries
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_gvc_output_all(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \code{data.frame} with one row per country.
+\end{Value}
+\HeaderA{bm\_gvc\_output\_country}{Output-based GVC decomposition for one country}{bm.Rul.gvc.Rul.output.Rul.country}
+%
+\begin{Description}
+For a given country s, this function returns a row with:
+\begin{itemize}
+
+\item{} GVC\_PF\_X  : pure-forward GVC-related output
+\item{} GVC\_PB\_X  : pure-backward GVC-related output
+\item{} GVC\_TSImp : imported-input two-sided GVC-related output
+\item{} GVC\_TSDom : domestic-input two-sided GVC-related output
+\item{} GVC\_TS\_X  : total two-sided (sum of imported and domestic)
+\item{} GVC\_X     : total GVC-related output (PF + PB + TS)
+\item{} DomX      : proxy for purely domestic output chains
+\item{} TradX     : residual "traditional" (one-border) trade-related output
+\item{} X\_total   : total output of s
+
+\end{itemize}
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_gvc_output_country(io, s, Xexp_list = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+
+\item[\code{s}] Country (index or name).
+
+\item[\code{Xexp\_list}] Optional precomputed export-related outputs list.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A one-row \code{data.frame} with these components.
+\end{Value}
+\HeaderA{bm\_gvc\_output\_measures}{Output-based GVC participation indicators}{bm.Rul.gvc.Rul.output.Rul.measures}
+%
+\begin{Description}
+Builds on \code{bm\_gvc\_output\_all()} and computes, for each country:
+\begin{itemize}
+
+\item{} share\_GVC\_output = GVC\_X / X\_total
+\item{} share\_PF\_output  = GVC\_PF\_X / GVC\_X
+\item{} share\_TS\_output  = GVC\_TS\_X / GVC\_X
+\item{} share\_PB\_output  = GVC\_PB\_X / GVC\_X
+\item{} forward\_output   = (GVC\_PF\_X - GVC\_PB\_X) / GVC\_X
+
+\end{itemize}
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_gvc_output_measures(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+These mirror the trade-based indicators on the output side.
+\end{Details}
+%
+\begin{Value}
+A \code{data.frame} with one row per country.
+\end{Value}
+\HeaderA{bm\_gvc\_pb\_output}{Pure-backward GVC-related output (country level)}{bm.Rul.gvc.Rul.pb.Rul.output}
+%
+\begin{Description}
+For a given country s, this function computes the pure-backward
+GVC-related output, interpreted as foreign value added embodied
+in s's output that is ultimately absorbed abroad in a one-border
+GVC pattern.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_gvc_pb_output(io, s)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+
+\item[\code{s}] Country (index or name).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+This follows the BM\_2025 style expression using:
+\begin{itemize}
+
+\item{} Y\_s\_total = Σ\_z Y\_sz
+\item{} Y\_ss      = Y\_ss
+\item{} A\_jk, B\_ks, L\_jj, L\_ss blocks.
+
+\end{itemize}
+
+\end{Details}
+%
+\begin{Value}
+Numeric scalar: pure-backward GVC-related output of s.
+\end{Value}
+\HeaderA{bm\_gvc\_pf\_output}{Pure-forward GVC-related output (country level)}{bm.Rul.gvc.Rul.pf.Rul.output}
+%
+\begin{Description}
+For a given country s, this function computes the pure-forward
+GVC-related output, i.e. domestic value added of s embodied in r's
+export-related output to third countries (forward chains).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_gvc_pf_output(io, s, Xexp_list = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+
+\item[\code{s}] Country (index or name).
+
+\item[\code{Xexp\_list}] Optional precomputed list of export-related output
+(as from \code{bm\_build\_Xexp\_list(io)}). If \code{NULL}, it is
+built internally.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Numeric scalar: pure-forward GVC-related output of s.
+\end{Value}
+\HeaderA{bm\_gvc\_trade\_by\_exporter}{Trade-based GVC decomposition by exporter}{bm.Rul.gvc.Rul.trade.Rul.by.Rul.exporter}
+%
+\begin{Description}
+Aggregates the bilateral tripartite GVC trade decomposition
+over all importing partners for each exporting country s.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_gvc_trade_by_exporter(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+For each exporter, it returns:
+\begin{itemize}
+
+\item{} E\_sr     : total gross exports (sum over r)
+\item{} GVC\_sr   : total GVC-related trade
+\item{} GVC\_PF   : pure-forward GVC-related trade
+\item{} GVC\_TS   : two-sided GVC-related trade
+\item{} GVC\_PB   : pure-backward GVC-related trade
+
+\end{itemize}
+
+\end{Details}
+%
+\begin{Value}
+A \code{data.frame} with one row per exporter.
+\end{Value}
+\HeaderA{bm\_gvc\_trade\_measures}{Trade-based GVC participation indicators}{bm.Rul.gvc.Rul.trade.Rul.measures}
+%
+\begin{Description}
+Builds on \code{bm\_gvc\_trade\_by\_exporter()} and computes,
+for each exporter:
+\begin{itemize}
+
+\item{} share\_GVC\_trade = GVC\_sr / E\_sr
+\item{} share\_PF\_trade  = GVC\_PF / GVC\_sr
+\item{} share\_TS\_trade  = GVC\_TS / GVC\_sr
+\item{} share\_PB\_trade  = GVC\_PB / GVC\_sr
+\item{} forward\_trade   = (GVC\_PF - GVC\_PB) / GVC\_sr
+
+\end{itemize}
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_gvc_trade_measures(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+These correspond to the paper's trade-based participation
+and forwardness indicators.
+\end{Details}
+%
+\begin{Value}
+A \code{data.frame} with one row per country.
+\end{Value}
+\HeaderA{bm\_gvc\_ts\_domestic\_output}{Two-sided GVC-related output from domestic inputs}{bm.Rul.gvc.Rul.ts.Rul.domestic.Rul.output}
+%
+\begin{Description}
+Domestic two-sided GVC-related output of s is the domestic part of
+two-sided GVC chains: domestic value added of s embodied in r's GVC
+production that combines domestic and foreign inputs.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_gvc_ts_domestic_output(io, s, Xexp_list = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+
+\item[\code{s}] Country (index or name).
+
+\item[\code{Xexp\_list}] Optional precomputed export-related outputs list.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Numeric scalar: domestic two-sided GVC-related output of s.
+\end{Value}
+\HeaderA{bm\_gvc\_ts\_import\_output}{Two-sided GVC-related output from imported inputs}{bm.Rul.gvc.Rul.ts.Rul.import.Rul.output}
+%
+\begin{Description}
+Imported two-sided GVC-related output of s is defined as all imported
+inputs used in s's output, net of those absorbed in purely domestic
+chains, net of the pure-backward part.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_gvc_ts_import_output(io, s, gvc_pb_s)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+
+\item[\code{s}] Country (index or name).
+
+\item[\code{gvc\_pb\_s}] Pre-computed pure-backward GVC output of s
+(from \code{bm\_gvc\_pb\_output}).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Numeric scalar: imported two-sided GVC-related output of s.
+\end{Value}
+\HeaderA{bm\_pb\_sr}{PB\_sr: Pure-backward GVC trade (import content used in r's final demand)}{bm.Rul.pb.Rul.sr}
+%
+\begin{Description}
+Pure-backward GVC trade is the import content of production in s
+that serves r's final demand of s and r goods.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_pb_sr(io, s, r)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+
+\item[\code{s}] Exporting country (index or name).
+
+\item[\code{r}] Importing country (index or name).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+In your notation:
+\begin{itemize}
+
+\item{} q\_s(sr) = L\_ss ( y\_sr + A\_sr L\_rr y\_rr )
+\item{} PB\_sr = Σ\_t≠s ( u\_N A\_ts q\_s(sr) ).
+
+\end{itemize}
+
+\end{Details}
+%
+\begin{Value}
+Numeric scalar, PB\_sr.
+\end{Value}
+\HeaderA{bm\_sector\_id}{Resolve a sector (name or index) to numeric index 1..N}{bm.Rul.sector.Rul.id}
+%
+\begin{Description}
+Resolve a sector (name or index) to numeric index 1..N
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_sector_id(io, sector)
+\end{verbatim}
+\end{Usage}
+\HeaderA{bm\_toy\_data}{Toy 4-country, 3-sector IO table for bmGVC}{bm.Rul.toy.Rul.data}
+\aliasA{bm\_toy\_countries}{bm\_toy\_data}{bm.Rul.toy.Rul.countries}
+\aliasA{bm\_toy\_sectors}{bm\_toy\_data}{bm.Rul.toy.Rul.sectors}
+\aliasA{bm\_toy\_VA}{bm\_toy\_data}{bm.Rul.toy.Rul.VA}
+\aliasA{bm\_toy\_X}{bm\_toy\_data}{bm.Rul.toy.Rul.X}
+\aliasA{bm\_toy\_Y}{bm\_toy\_data}{bm.Rul.toy.Rul.Y}
+\aliasA{bm\_toy\_Z}{bm\_toy\_data}{bm.Rul.toy.Rul.Z}
+\keyword{datasets}{bm\_toy\_data}
+%
+\begin{Description}
+A small multi-country input–output data set used in bmGVC examples
+and vignettes. It contains four countries (China, India, Japan, ROW)
+and three sectors (Primary, Manufacturing, Service).
+\end{Description}
+%
+\begin{Format}
+\begin{description}
+
+\item[bm\_toy\_Z] numeric matrix \code{12 x 12}
+\item[bm\_toy\_Y] numeric matrix \code{12 x 4}
+\item[bm\_toy\_VA] numeric vector of length 12
+\item[bm\_toy\_X] numeric vector of length 12
+\item[bm\_toy\_countries] character vector of length 4
+\item[bm\_toy\_sectors] character vector of length 3
+
+\end{description}
+
+\end{Format}
+%
+\begin{Details}
+The data are stored in six objects:
+\begin{itemize}
+
+\item{} \code{bm\_toy\_Z}: 12 x 12 intermediate demand matrix
+\item{} \code{bm\_toy\_Y}: 12 x 4 final demand matrix
+\item{} \code{bm\_toy\_VA}: length-12 value-added vector
+\item{} \code{bm\_toy\_X}: length-12 gross output vector
+\item{} \code{bm\_toy\_countries}: character vector of length 4
+\item{} \code{bm\_toy\_sectors}: character vector of length 3
+
+\end{itemize}
+
+
+The ordering of industries is
+(China P,M,S; India P,M,S; Japan P,M,S; ROW P,M,S).
+\end{Details}
+\HeaderA{bm\_tripartite\_trade\_all}{Tripartite GVC trade for all bilateral pairs}{bm.Rul.tripartite.Rul.trade.Rul.all}
+%
+\begin{Description}
+Computes the BM\_2025 tripartite GVC trade decomposition for all
+ordered pairs (s,r) with s ≠ r.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_tripartite_trade_all(io)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \code{data.frame} with one row per pair (s,r).
+\end{Value}
+\HeaderA{bm\_tripartite\_trade\_sr}{Tripartite GVC trade decomposition for a bilateral pair (s,r)}{bm.Rul.tripartite.Rul.trade.Rul.sr}
+%
+\begin{Description}
+For exports from s to r, this function returns:
+\begin{itemize}
+
+\item{} E\_sr: gross exports (sum of e\_sr)
+\item{} DAVAX\_sr: domestic value added that crosses only one border and is absorbed in r's final demand
+\item{} GVC\_sr: GVC-related part of E\_sr, GVC\_sr = E\_sr - DAVAX\_sr
+\item{} GVC\_PF: pure-forward GVC trade (residual)
+\item{} GVC\_TS: two-sided GVC trade
+\item{} GVC\_PB: pure-backward GVC trade
+
+\end{itemize}
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_tripartite_trade_sr(io, s, r)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+
+\item[\code{s}] Exporting country (index or name).
+
+\item[\code{r}] Importing country (index or name).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+In your notation:
+\deqn{E_{sr} = DAVAX_{sr} + GVC_{sr}}{}
+\deqn{GVC_{sr} = GVC^{PF}_{sr} + GVC^{TS}_{sr} + GVC^{PB}_{sr}}{}.
+\end{Details}
+%
+\begin{Value}
+A one-row \code{data.frame} with all components.
+\end{Value}
+\HeaderA{bm\_ts\_sr}{TS\_sr: Two-sided GVC trade for exports from s to r}{bm.Rul.ts.Rul.sr}
+%
+\begin{Description}
+Two-sided GVC trade is the import content in s used to serve r's exports
+to third countries (forward-plus-backward chains).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bm_ts_sr(io, s, r)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{io}] A \code{bm\_io} object.
+
+\item[\code{s}] Exporting country (index or name).
+
+\item[\code{r}] Importing country (index or name).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+In your notation:
+\begin{itemize}
+
+\item{} sum\_e\_r\_to\_others = Σ\_j≠r e\_rj
+\item{} demand in s: A\_sr L\_rr sum\_e\_r\_to\_others
+\item{} q\_s(ts) = L\_ss A\_sr L\_rr sum\_e\_r\_to\_others
+\item{} TS\_sr = Σ\_t≠s ( u\_N A\_ts q\_s(ts) ).
+
+\end{itemize}
+
+\end{Details}
+%
+\begin{Value}
+Numeric scalar, TS\_sr.
+\end{Value}
+\printindex{}
+\end{document}

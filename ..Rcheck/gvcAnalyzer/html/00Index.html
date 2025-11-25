@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head><title>R: Global Value Chain Decomposition for Value-Added Trade</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+<h1> Global Value Chain Decomposition for Value-Added Trade
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;gvcAnalyzer&rsquo; version 0.1.0</h2>
+
+<ul><li><a href="../DESCRIPTION" type="text/plain; charset=utf-8">DESCRIPTION file</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="bm_2023_bilateral_pure.html">bm_2023_bilateral_pure</a></td>
+<td>BM_2023 pure bilateral decomposition of exports from s to r</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2023_bilateral_pure_all.html">bm_2023_bilateral_pure_all</a></td>
+<td>BM_2023 pure bilateral (/sr) decomposition for all pairs</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2023_bilateral_sink.html">bm_2023_bilateral_sink</a></td>
+<td>BM_2023 sink-based bilateral decomposition of exports from s to r</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2023_bilateral_sink_all.html">bm_2023_bilateral_sink_all</a></td>
+<td>BM_2023 sink-based bilateral decomposition for all pairs</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2023_bilateral_source.html">bm_2023_bilateral_source</a></td>
+<td>BM_2023 source-based bilateral decomposition of exports from s to r</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2023_bilateral_source_all.html">bm_2023_bilateral_source_all</a></td>
+<td>BM_2023 source-based bilateral decomposition for all pairs</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2023_exporter_total.html">bm_2023_exporter_total</a></td>
+<td>BM_2023 exporter-perspective decomposition of total exports of s</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2023_exporter_total_all.html">bm_2023_exporter_total_all</a></td>
+<td>BM_2023 exporter totals for all countries</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2023_trade_components.html">bm_2023_trade_components</a></td>
+<td>BM_2023 trade-based GVC components by exporter</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2023_trade_measures.html">bm_2023_trade_measures</a></td>
+<td>BM_2023 trade-based GVC participation measures</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2023_tripartite_bilateral.html">bm_2023_tripartite_bilateral</a></td>
+<td>BM_2023 tripartite GVC trade for all bilateral pairs</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2023_tripartite_pair.html">bm_2023_tripartite_pair</a></td>
+<td>BM_2023 tripartite GVC trade decomposition for one pair (s,r)</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2025_output_components.html">bm_2025_output_components</a></td>
+<td>BM_2025 output-based GVC components by exporter</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2025_output_components_sector.html">bm_2025_output_components_sector</a></td>
+<td>BM 2025 output components by country and sector</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2025_output_measures.html">bm_2025_output_measures</a></td>
+<td>BM_2025 output-based GVC participation indicators</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2025_output_measures_sector.html">bm_2025_output_measures_sector</a></td>
+<td>BM 2025 output participation measures by country and sector</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2025_trade_exporter.html">bm_2025_trade_exporter</a></td>
+<td>BM_2025 exporter-level GVC trade totals</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2025_trade_measures.html">bm_2025_trade_measures</a></td>
+<td>BM_2025 trade-based GVC participation indicators</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2025_tripartite_trade.html">bm_2025_tripartite_trade</a></td>
+<td>BM_2025 tripartite GVC trade decomposition for one pair (s,r)</td></tr>
+<tr><td style="width: 25%;"><a href="bm_2025_tripartite_trade_all.html">bm_2025_tripartite_trade_all</a></td>
+<td>BM_2025 tripartite GVC trade decomposition for all pairs</td></tr>
+<tr><td style="width: 25%;"><a href="bm_build_io.html">bm_build_io</a></td>
+<td>Build a bm_io object from IO table blocks</td></tr>
+<tr><td style="width: 25%;"><a href="bm_country_id.html">bm_country_id</a></td>
+<td>Resolve a country (name or index) to numeric index 1..G</td></tr>
+<tr><td style="width: 25%;"><a href="bm_davax_sr.html">bm_davax_sr</a></td>
+<td>DAVAX_sr: Domestic value added absorbed in final demand in r</td></tr>
+<tr><td style="width: 25%;"><a href="bm_get_e_sr.html">bm_get_e_sr</a></td>
+<td>Exports from s to r by sector (intermediate + final)</td></tr>
+<tr><td style="width: 25%;"><a href="bm_get_e_star.html">bm_get_e_star</a></td>
+<td>Exports from s to all foreign partners by sector (e_s*)</td></tr>
+<tr><td style="width: 25%;"><a href="bm_gvc_measures_all.html">bm_gvc_measures_all</a></td>
+<td>Combined trade- and output-based GVC measures</td></tr>
+<tr><td style="width: 25%;"><a href="bm_gvc_output_all.html">bm_gvc_output_all</a></td>
+<td>Output-based GVC decomposition for all countries</td></tr>
+<tr><td style="width: 25%;"><a href="bm_gvc_output_country.html">bm_gvc_output_country</a></td>
+<td>Output-based GVC decomposition for one country</td></tr>
+<tr><td style="width: 25%;"><a href="bm_gvc_output_measures.html">bm_gvc_output_measures</a></td>
+<td>Output-based GVC participation indicators</td></tr>
+<tr><td style="width: 25%;"><a href="bm_gvc_pb_output.html">bm_gvc_pb_output</a></td>
+<td>Pure-backward GVC-related output (country level)</td></tr>
+<tr><td style="width: 25%;"><a href="bm_gvc_pf_output.html">bm_gvc_pf_output</a></td>
+<td>Pure-forward GVC-related output (country level)</td></tr>
+<tr><td style="width: 25%;"><a href="bm_gvc_trade_by_exporter.html">bm_gvc_trade_by_exporter</a></td>
+<td>Trade-based GVC decomposition by exporter</td></tr>
+<tr><td style="width: 25%;"><a href="bm_gvc_trade_measures.html">bm_gvc_trade_measures</a></td>
+<td>Trade-based GVC participation indicators</td></tr>
+<tr><td style="width: 25%;"><a href="bm_gvc_ts_domestic_output.html">bm_gvc_ts_domestic_output</a></td>
+<td>Two-sided GVC-related output from domestic inputs</td></tr>
+<tr><td style="width: 25%;"><a href="bm_gvc_ts_import_output.html">bm_gvc_ts_import_output</a></td>
+<td>Two-sided GVC-related output from imported inputs</td></tr>
+<tr><td style="width: 25%;"><a href="bm_pb_sr.html">bm_pb_sr</a></td>
+<td>PB_sr: Pure-backward GVC trade (import content used in r's final demand)</td></tr>
+<tr><td style="width: 25%;"><a href="bm_sector_id.html">bm_sector_id</a></td>
+<td>Resolve a sector (name or index) to numeric index 1..N</td></tr>
+<tr><td style="width: 25%;"><a href="bm_toy_data.html">bm_toy_countries</a></td>
+<td>Toy 4-country, 3-sector IO table for bmGVC</td></tr>
+<tr><td style="width: 25%;"><a href="bm_toy_data.html">bm_toy_data</a></td>
+<td>Toy 4-country, 3-sector IO table for bmGVC</td></tr>
+<tr><td style="width: 25%;"><a href="bm_toy_data.html">bm_toy_sectors</a></td>
+<td>Toy 4-country, 3-sector IO table for bmGVC</td></tr>
+<tr><td style="width: 25%;"><a href="bm_toy_data.html">bm_toy_VA</a></td>
+<td>Toy 4-country, 3-sector IO table for bmGVC</td></tr>
+<tr><td style="width: 25%;"><a href="bm_toy_data.html">bm_toy_X</a></td>
+<td>Toy 4-country, 3-sector IO table for bmGVC</td></tr>
+<tr><td style="width: 25%;"><a href="bm_toy_data.html">bm_toy_Y</a></td>
+<td>Toy 4-country, 3-sector IO table for bmGVC</td></tr>
+<tr><td style="width: 25%;"><a href="bm_toy_data.html">bm_toy_Z</a></td>
+<td>Toy 4-country, 3-sector IO table for bmGVC</td></tr>
+<tr><td style="width: 25%;"><a href="bm_tripartite_trade_all.html">bm_tripartite_trade_all</a></td>
+<td>Tripartite GVC trade for all bilateral pairs</td></tr>
+<tr><td style="width: 25%;"><a href="bm_tripartite_trade_sr.html">bm_tripartite_trade_sr</a></td>
+<td>Tripartite GVC trade decomposition for a bilateral pair (s,r)</td></tr>
+<tr><td style="width: 25%;"><a href="bm_ts_sr.html">bm_ts_sr</a></td>
+<td>TS_sr: Two-sided GVC trade for exports from s to r</td></tr>
+</table>
+</div></body></html>

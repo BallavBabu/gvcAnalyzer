@@ -4,7 +4,7 @@
 # We reuse:
 # - bm_country_id(io, country)    ## defined in bm_tripartite_trade.R
 # - bm_idx_country(g, N)         ## defined in bm_io.R
-# - bm_block(M, i, j, N)         ## defined in bm_io.R
+# - bm_block(M, i, j)         ## defined in bm_io.R
 # - bm_get_e_star(io, s)         ## from bm_io.R
 
 # --- Small helpers -------------------------------------------------------
@@ -39,7 +39,7 @@ bm_build_Xexp_list <- function(io) {
   G <- io$G; N <- io$N
   Xexp_list <- vector("list", G)
   for (r_id in seq_len(G)) {
-    B_rr      <- bm_block(io$B, r_id, r_id, N)
+    B_rr      <- bm_block(io$B, r_id, r_id)
     e_r_star  <- bm_get_e_star(io, r_id)
     Xexp_list[[r_id]] <- B_rr %*% e_r_star
   }
@@ -73,12 +73,12 @@ bm_gvc_pf_output <- function(io, s, Xexp_list = NULL) {
 
   v_s  <- matrix(bm_v_country(io, s_id), nrow = 1)
   L_ss <- io$L_list[[s_id]]
-  A_ss <- bm_block(io$A, s_id, s_id, N)
+  A_ss <- bm_block(io$A, s_id, s_id)
 
   val <- 0
   for (r_id in seq_len(G)) {
     if (r_id == s_id) next
-    A_sr   <- bm_block(io$A, s_id, r_id, N)
+    A_sr   <- bm_block(io$A, s_id, r_id)
     Xexp_r <- Xexp_list[[r_id]]               # N x 1
 
     inner   <- A_sr %*% Xexp_r                # direct sales from s to r's export output
@@ -128,15 +128,15 @@ bm_gvc_pb_output <- function(io, s) {
     term_j <- rep(0, N)
     for (k_id in seq_len(G)) {
       if (k_id == j_id) next
-      A_jk <- bm_block(io$A, j_id, k_id, N)
-      B_ks <- bm_block(io$B, k_id, s_id, N)
+      A_jk <- bm_block(io$A, j_id, k_id)
+      B_ks <- bm_block(io$B, k_id, s_id)
       term_j <- term_j + A_jk %*% (B_ks %*% Y_s_total)
     }
     val_first <- val_first + as.numeric(v_j %*% (L_jj %*% term_j))
 
     # subtract domestic chain part for j ≠ s
     if (j_id != s_id) {
-      A_js <- bm_block(io$A, j_id, s_id, N)
+      A_js <- bm_block(io$A, j_id, s_id)
       L_ss <- io$L_list[[s_id]]
       val_second <- val_second + as.numeric(
         v_j %*% (L_jj %*% (A_js %*% (L_ss %*% Y_ss)))
@@ -180,15 +180,15 @@ bm_gvc_ts_import_output <- function(io, s, gvc_pb_s) {
     term_j1 <- rep(0, N)
     for (k_id in seq_len(G)) {
       if (k_id == j_id) next
-      A_jk <- bm_block(io$A, j_id, k_id, N)
-      B_ks <- bm_block(io$B, k_id, s_id, N)
+      A_jk <- bm_block(io$A, j_id, k_id)
+      B_ks <- bm_block(io$B, k_id, s_id)
       term_j1 <- term_j1 + A_jk %*% (B_ks %*% X_s)
     }
     val_first <- val_first + as.numeric(v_j %*% (L_jj %*% term_j1))
 
     # subtract purely domestic-chain part for j ≠ s
     if (j_id != s_id) {
-      A_js <- bm_block(io$A, j_id, s_id, N)
+      A_js <- bm_block(io$A, j_id, s_id)
       L_ss <- io$L_list[[s_id]]
       val_second <- val_second + as.numeric(
         v_j %*% (L_jj %*% (A_js %*% (L_ss %*% (L_ss %*% Y_ss))))
@@ -223,12 +223,12 @@ bm_gvc_ts_domestic_output <- function(io, s, Xexp_list = NULL) {
 
   v_s  <- matrix(bm_v_country(io, s_id), nrow = 1)
   L_ss <- io$L_list[[s_id]]
-  A_ss <- bm_block(io$A, s_id, s_id, N)
+  A_ss <- bm_block(io$A, s_id, s_id)
 
   val <- 0
   for (r_id in seq_len(G)) {
     if (r_id == s_id) next
-    A_sr   <- bm_block(io$A, s_id, r_id, N)
+    A_sr   <- bm_block(io$A, s_id, r_id)
     Xexp_r <- Xexp_list[[r_id]]
 
     inner  <- A_sr %*% Xexp_r

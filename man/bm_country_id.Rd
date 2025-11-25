@@ -6,6 +6,11 @@
 \usage{
 bm_country_id(io, country)
 }
+\arguments{
+\item{io}{A bm_io object containing the MRIO data.}
+
+\item{country}{Country code or index used to select a country in \code{io}.}
+}
 \description{
 Resolve a country (name or index) to numeric index 1..G
 }

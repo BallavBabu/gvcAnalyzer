@@ -29,9 +29,10 @@ This vignette demonstrates both frameworks using a four-country, three-sector in
 
 ## References
 
-Borin, A., & Mancini, M. (2023). Measuring what matters in value-added trade. Economic Systems Research, 35(4), 586–613. https://doi.org/10.1080/09535314.2022.2153221
+Borin, A., & Mancini, M. (2023). Measuring what matters in value-added trade. Economic Systems Research, 35(4), 586–613
 
-Borin, A., Mancini, M., & Taglioni, D. (2025). Economic consequences of trade and global value chain integration: A measurement perspective. The World Bank Economic Review. Advance online publication. https://doi.org/10.1093/wber/lhaf017
+Borin, A., Mancini, M., & Taglioni, D. (2025). Economic consequences of trade and global value chain integration: A measurement perspective. The World Bank Economic Review
+
 
 # Data and Setup
 

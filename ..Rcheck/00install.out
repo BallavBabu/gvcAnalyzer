@@ -1,0 +1,29 @@
+* installing *source* package ‘gvcAnalyzer’ ...
+** this is package ‘gvcAnalyzer’ version ‘0.1.0’
+** using staged installation
+** R
+** data
+*** moving datasets to lazyload DB
+** byte-compile and prepare package for lazy loading
+Note: possible error in 'bm_block(io$A, i, j, ': unused argument (io$N) at bm_tripartite_trade.R:27 
+Note: possible error in 'bm_block(io$B, r_id, ': unused argument (N) at bm_output_gvc.R:42 
+Note: possible error in 'bm_block(io$A, j_id, ': unused argument (N) at bm_output_gvc.R:131 
+Note: possible error in 'bm_block(io$B, k_id, ': unused argument (N) at bm_output_gvc.R:132 
+Note: possible error in 'bm_block(io$A, j_id, ': unused argument (N) at bm_output_gvc.R:139 
+Note: possible error in 'bm_block(io$A, s_id, ': unused argument (N) at bm_output_gvc.R:76 
+Note: possible error in 'bm_block(io$A, s_id, ': unused argument (N) at bm_output_gvc.R:81 
+Note: possible error in 'bm_block(io$A, s_id, ': unused argument (N) at bm_output_gvc.R:226 
+Note: possible error in 'bm_block(io$A, s_id, ': unused argument (N) at bm_output_gvc.R:231 
+Note: possible error in 'bm_block(io$A, j_id, ': unused argument (N) at bm_output_gvc.R:183 
+Note: possible error in 'bm_block(io$B, k_id, ': unused argument (N) at bm_output_gvc.R:184 
+Note: possible error in 'bm_block(io$A, j_id, ': unused argument (N) at bm_output_gvc.R:191 
+Note: possible error in 'bm_block(io$A, t_id, ': unused argument (N) at bm_tripartite_trade.R:107 
+Note: possible error in 'bm_block(io$A, t_id, ': unused argument (N) at bm_tripartite_trade.R:156 
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (gvcAnalyzer)
