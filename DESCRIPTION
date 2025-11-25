@@ -1,11 +1,41 @@
-Package: bmGVC
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Package: gvcAnalyzer
+Type: Package
+Title: Global Value Chain Decomposition and Analysis
+Version: 0.1.0
+Authors@R: c(
+    person("Ballav", "Babu", email = "ballav.babu@example.com", 
+           role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID")),
+    person("Alessandro", "Borin", role = "ctb",
+           comment = "Methodology developer"),
+    person("Michele", "Mancini", role = "ctb",
+           comment = "Methodology developer")
+    )
+Description: Comprehensive toolkit for measuring global value chain (GVC) 
+    participation using the Borin-Mancini frameworks. Implements BM 2023 
+    trade-based decomposition (Borin & Mancini, 2023, <doi:10.1016/j.jinteco.2023.103811>) 
+    which decomposes gross exports into domestic and foreign value-added components 
+    with double-counting correction, and BM 2025 output-based decomposition which 
+    measures GVC participation through production structures. Both frameworks 
+    distinguish pure-forward, pure-backward, and two-sided GVC activities, enabling 
+    analysis of countries' positions in global supply chains at national and 
+    sectoral levels. Designed for researchers analyzing international trade, 
+    industrial organization, and economic development using multi-regional 
+    input-output (MRIO) data such as WIOD, OECD-ICIO, or ADB-MRIO.
+License: MIT + file LICENSE
+URL: https://github.com/yourusername/gvcAnalyzer
+BugReports: https://github.com/yourusername/gvcAnalyzer/issues
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
+LazyData: true
+Depends: 
+    R (>= 3.5.0)
+Imports:
+    Matrix (>= 1.2-0),
+    methods
+Suggests:
+    knitr (>= 1.20),
+    rmarkdown (>= 2.0),
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
 RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)

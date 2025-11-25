@@ -1,0 +1,235 @@
+---
+title: "Output-Based GVC Decomposition: The BM 2025 Framework"
+author: "gvcAnalyzer Package"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Output-Based GVC Decomposition: The BM 2025 Framework}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+library(gvcAnalyzer)
+```
+
+# Introduction
+
+This vignette provides a detailed examination of the **BM 2025 output-based GVC decomposition** methodology implemented in the **gvcAnalyzer** package. While traditional trade-based measures focus on exports, the output-based approach captures the full extent of GVC participation in a country's production structure.
+
+## Theoretical Foundation
+
+The BM 2025 framework (Borin & Mancini, 2025) decomposes gross output into five mutually exclusive components:
+
+1. **Purely domestic production**: Value added that never crosses international borders
+2. **Traditional trade**: Simple one-crossing exports absorbed directly abroad
+3. **Pure-forward GVC**: Domestic value added that crosses borders multiple times (upstream suppliers)
+4. **Pure-backward GVC**: Foreign value added embodied in production (downstream assemblers)
+5. **Two-sided GVC**: Production involving both foreign inputs and subsequent re-export
+
+This decomposition provides an output-side perspective complementary to trade-based measures.
+
+## Reference
+
+Borin, A., & Mancini, M. (2025). Measuring What Matters in Value-Added Trade: An Output-Based Approach. *Working Paper*.
+
+# Setup and Data
+```{r}
+io <- bm_build_io(
+  Z         = bm_toy_Z,
+  Y         = bm_toy_Y,
+  VA        = bm_toy_VA,
+  X         = bm_toy_X,
+  countries = bm_toy_countries,
+  sectors   = bm_toy_sectors
+)
+
+io$countries
+io$sectors
+```
+
+# Country-Level Output Decomposition
+
+## Computing Output Components
+```{r}
+out_comp <- bm_2025_output_components(io)
+out_comp
+```
+
+Each row represents a country's production structure decomposed into:
+
+- **GVC_PF_X**: Pure-forward GVC-related output
+- **GVC_PB_X**: Pure-backward GVC-related output
+- **GVC_TSImp**: Two-sided GVC output from imported intermediates
+- **GVC_TSDom**: Two-sided GVC output from domestic intermediates
+- **GVC_TS_X**: Total two-sided GVC output
+- **GVC_X**: Total GVC-related output
+- **DomX**: Purely domestic output
+- **TradX**: Traditional one-crossing trade
+- **X_total**: Total gross output
+
+## Example: China's Production Structure
+```{r}
+china_row <- out_comp[out_comp$country == "China", ]
+china_row
+```
+
+## Output-Based Participation Measures
+```{r}
+out_meas <- bm_2025_output_measures(io)
+out_meas
+```
+
+### Key Indicators
+
+- **share_GVC_output**: Overall GVC participation intensity (GVC_X / X_total)
+- **share_PF_output**: Share of GVC output in upstream activities (GVC_PF_X / GVC_X)
+- **share_TS_output**: Share of GVC output in two-sided chains (GVC_TS_X / GVC_X)
+- **share_PB_output**: Share of GVC output in downstream assembly (GVC_PB_X / GVC_X)
+- **forward_output**: Forward orientation index ((GVC_PF_X − GVC_PB_X) / GVC_X)
+
+A positive **forward_output** indicates upstream positioning, while negative values indicate downstream positioning.
+
+### Comparing China and ROW
+```{r}
+china_meas <- out_meas[out_meas$country == "China", ]
+row_meas   <- out_meas[out_meas$country == "ROW", ]
+
+china_meas[, c("country", "share_GVC_output", "forward_output")]
+row_meas[, c("country", "share_GVC_output", "forward_output")]
+```
+
+# Sector-Level Output Decomposition
+
+## Computing Sectoral Components
+```{r}
+out_comp_sec <- bm_2025_output_components_sector(io)
+head(out_comp_sec, 9)
+```
+
+This allocation ensures sectoral components aggregate to country totals.
+
+### Verifying Aggregation Consistency
+```{r}
+check_agg <- aggregate(
+  cbind(DomX_i, TradX_i, GVC_PF_Xi, GVC_PB_Xi, GVC_TS_Xi, GVC_Xi, X_i) ~ country,
+  data = out_comp_sec,
+  FUN = sum
+)
+
+check_agg
+out_comp[, c("country", "DomX", "TradX", "GVC_PF_X", "GVC_PB_X", "GVC_TS_X", "GVC_X", "X_total")]
+```
+
+## Sectoral Participation Measures
+```{r}
+out_meas_sec <- bm_2025_output_measures_sector(io)
+head(out_meas_sec, 9)
+```
+
+## Analyzing Sectoral Heterogeneity
+
+### Ranking Sectors by GVC Intensity Within China
+```{r}
+china_sec <- out_meas_sec[out_meas_sec$country == "China", ]
+china_sec <- china_sec[order(china_sec$share_GVC_output_i, decreasing = TRUE), ]
+china_sec[, c("country", "sector", "share_GVC_output_i", "forward_output_i")]
+```
+
+### Cross-Country Comparison: Manufacturing Sector
+```{r}
+manuf_sec <- out_meas_sec[out_meas_sec$sector == "Manufacturing", ]
+manuf_sec <- manuf_sec[order(manuf_sec$share_GVC_output_i, decreasing = TRUE), ]
+manuf_sec[, c("country", "sector", "share_GVC_output_i", "forward_output_i")]
+```
+
+# Visualization
+
+## Sectoral GVC Participation by Country
+```{r fig.height=6, fig.width=7}
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+for (ctry in io$countries) {
+  ctry_data <- out_meas_sec[out_meas_sec$country == ctry, ]
+  barplot(
+    height = ctry_data$share_GVC_output_i,
+    names.arg = ctry_data$sector,
+    main = paste(ctry, "GVC Participation"),
+    ylab = "GVC Share of Output",
+    col = "steelblue",
+    las = 2
+  )
+}
+```
+
+## Forward vs Backward Orientation
+```{r fig.width=7, fig.height=6}
+par(mar = c(5, 5, 3, 2))
+plot(
+  out_meas_sec$share_PB_output_i,
+  out_meas_sec$share_PF_output_i,
+  pch = 19,
+  col = as.numeric(factor(out_meas_sec$country)),
+  cex = 1.5,
+  xlab = "Backward GVC Share",
+  ylab = "Forward GVC Share",
+  main = "Sectoral GVC Orientation"
+)
+legend("topright", legend = io$countries, col = 1:io$G, pch = 19, cex = 0.8)
+abline(a = 0, b = 1, lty = 2, col = "gray")
+```
+
+Sectors above the diagonal are more forward-oriented (upstream suppliers), while those below are more backward-oriented (downstream assemblers).
+
+## Two-Sided GVC Decomposition
+```{r}
+ts_data <- out_comp_sec[out_comp_sec$GVC_TS_Xi > 0, ]
+ts_data$TS_import_share <- ts_data$GVC_TSImp_i / ts_data$GVC_TS_Xi
+
+head(ts_data[, c("country", "sector", "GVC_TS_Xi", "GVC_TSImp_i", 
+                 "GVC_TSDom_i", "TS_import_share")], 9)
+```
+
+A higher **TS_import_share** indicates greater reliance on foreign inputs in two-sided GVC production.
+
+# Applications
+
+## Policy Analysis
+
+The BM 2025 output decomposition is useful for:
+
+1. **Industrial policy**: Identifying sectors with high GVC participation
+2. **Supply chain resilience**: Assessing import dependence (GVC_TSImp)
+3. **Upgrading strategies**: Tracking changes in forward/backward orientation
+4. **Structural transformation**: Monitoring sectoral GVC role evolution
+
+## Complementarity with Trade Measures
+
+Output-based measures capture aspects not visible in trade statistics:
+
+- Production for domestic final use embedding imported intermediates
+- Domestic value added in goods exported by partners
+- Total engagement in fragmented production beyond export intensity
+
+# Summary
+
+This vignette demonstrated:
+
+1. Theoretical foundation of the BM 2025 output-based GVC framework
+2. Country-level decomposition into five mutually exclusive output components
+3. Participation measures including GVC intensity and forward/backward orientation
+4. Sector-level decomposition preserving aggregation consistency
+5. Sectoral heterogeneity in GVC participation and positioning
+6. Visualization techniques for analyzing output-based GVC patterns
+7. Two-sided GVC decomposition into imported versus domestic intermediate contributions
+
+The output-based approach provides a comprehensive view of GVC participation complementary to traditional trade-based measures.
+
+# Session Information
+```{r}
+sessionInfo()
+```

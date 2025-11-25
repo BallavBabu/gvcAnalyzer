@@ -2,10 +2,31 @@
 % Please edit documentation in R/bm_2023_bilateral.R
 \name{bm_2023_bilateral_source}
 \alias{bm_2023_bilateral_source}
-\title{BM_2023 source-based bilateral decomposition of e_sr}
+\title{BM_2023 source-based bilateral decomposition of exports from s to r}
 \usage{
 bm_2023_bilateral_source(io, s, r)
 }
+\arguments{
+\item{io}{bm_io object as returned by \code{bm_build_io()}}
+
+\item{s}{exporter (country index or country code, e.g. 1 or "China")}
+
+\item{r}{importer (country index or country code, e.g. 2 or "India")}
+}
+\value{
+A data frame with one row for the pair (s,r):
+\itemize{
+\item \code{DVAsource_sr} Domestic value added from s in e_{sr}
+that never returns to s.
+\item \code{DDCsource_sr} Double-counting term from s due to
+multi-border domestic returns in e_{sr}.
+\item \code{FVAsource_sr} Foreign value added in e_{sr}.
+\item \code{FDCsource_sr} Foreign double-counting in e_{sr}.
+\item \code{EX_sr}        Gross exports e_{sr} (scalar).
+}
+}
 \description{
-BM_2023 source-based bilateral decomposition of e_sr
+Decomposes gross exports e_{sr} (from exporter s to importer r) as
+u_N × e_{sr} = DVAsource_sr + DDCsource_sr + FVAsource_sr + FDCsource_sr
+using the exporter-based slash matrix A^/s (and B^/s).
 }

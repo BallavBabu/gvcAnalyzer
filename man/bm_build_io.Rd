@@ -2,26 +2,34 @@
 % Please edit documentation in R/bm_io.R
 \name{bm_build_io}
 \alias{bm_build_io}
-\title{Build a BM-style IO object}
+\title{Build a bm_io object from IO table blocks}
 \usage{
 bm_build_io(Z, Y, VA, X, countries, sectors)
 }
 \arguments{
-\item{Z}{GN x GN intermediate-use matrix}
+\item{Z}{Intermediate demand matrix (GN x GN), rows = suppliers, cols = users.}
 
-\item{Y}{GN x G  final demand by destination country}
+\item{Y}{Final demand matrix (GN x G), columns = destination countries.}
 
-\item{VA}{length-GN vector of value added}
+\item{VA}{Value added vector (length GN), in same industry order as Z rows.}
 
-\item{X}{length-GN vector of gross output}
+\item{X}{Output vector (length GN), in same industry order as Z rows.}
 
-\item{countries}{character vector of country codes/names (length G)}
+\item{countries}{Character vector of country names, length G.}
 
-\item{sectors}{character vector of sector codes/names (length N)}
+\item{sectors}{Character vector of sector names, length N.}
 }
 \value{
-A list of IO objects and metadata used by bmGVC
+An object of class \code{"bm_io"} containing
+\itemize{
+\item \code{Z, Y, VA, X}
+\item \code{countries, sectors}
+\item \code{G, N, GN}
+\item \code{A}: technical coefficients (GN x GN)
+\item \code{B}: Leontief inverse (GN x GN)
+\item \code{v}: value-added coefficients (length GN)
+}
 }
 \description{
-Build a BM-style IO object
+Build a bm_io object from IO table blocks
 }
