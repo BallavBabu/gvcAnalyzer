@@ -78,3 +78,33 @@ bm_2023_bilateral_pure_all <- function(io) {
   rownames(out) <- NULL
   out
 }
+
+#' BM_2023 sink-based bilateral decomposition for all pairs
+#'
+#' Applies \code{bm_2023_bilateral_sink()} to all ordered pairs (s,r), s ≠ r.
+#'
+#' @param io bm_io object
+#'
+#' @return data.frame with one row per exporter-importer pair:
+#'   exporter, importer, DVAsink_sr, DDCsink_sr, FVAsink_sr, FDCsink_sr, EX_sr
+#' @export
+bm_2023_bilateral_sink_all <- function(io) {
+  stopifnot(inherits(io, "bm_io"))
+  G <- io$G
+
+  records <- list()
+  k <- 1L
+
+  for (s in seq_len(G)) {
+    for (r in seq_len(G)) {
+      if (s == r) next
+      records[[k]] <- bm_2023_bilateral_sink(io, s, r)
+      k <- k + 1L
+    }
+  }
+
+  out <- do.call(rbind, records)
+  rownames(out) <- NULL
+  out
+}
+
