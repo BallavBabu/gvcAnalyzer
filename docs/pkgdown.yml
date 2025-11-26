@@ -5,4 +5,7 @@ articles:
   bm2023-vs-bm2025: bm2023-vs-bm2025.html
   bm2025-output-focus: bm2025-output-focus.html
   gvcAnalyzer-intro: gvcAnalyzer-intro.html
-last_built: 2025-11-25T23:53Z
+last_built: 2025-11-26T00:07Z
+urls:
+  reference: https://ballavbabu.github.io/gvcAnalyzer/reference
+  article: https://ballavbabu.github.io/gvcAnalyzer/articles
