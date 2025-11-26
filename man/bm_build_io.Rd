@@ -7,28 +7,20 @@
 bm_build_io(Z, Y, VA, X, countries, sectors)
 }
 \arguments{
-\item{Z}{Intermediate demand matrix (GN x GN), rows = suppliers, cols = users.}
+\item{Z}{Intermediate demand matrix (GN x GN).}
 
-\item{Y}{Final demand matrix (GN x G), columns = destination countries.}
+\item{Y}{Final demand matrix. Can be (GN x G) OR (GN x (G * FD_categories)).}
 
-\item{VA}{Value added vector (length GN), in same industry order as Z rows.}
+\item{VA}{Value added. Can be a vector (length GN) or matrix (Rows x GN).}
 
-\item{X}{Output vector (length GN), in same industry order as Z rows.}
+\item{X}{Output vector (length GN).}
 
-\item{countries}{Character vector of country names, length G.}
+\item{countries}{Character vector of country names/codes (length G).}
 
-\item{sectors}{Character vector of sector names, length N.}
+\item{sectors}{Character vector of sector names/codes (length N).}
 }
 \value{
-An object of class \code{"bm_io"} containing
-\itemize{
-\item \code{Z, Y, VA, X}
-\item \code{countries, sectors}
-\item \code{G, N, GN}
-\item \code{A}: technical coefficients (GN x GN)
-\item \code{B}: Leontief inverse (GN x GN)
-\item \code{v}: value-added coefficients (length GN)
-}
+An object of class \code{"bm_io"}.
 }
 \description{
 Build a bm_io object from IO table blocks

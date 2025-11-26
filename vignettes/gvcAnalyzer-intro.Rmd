@@ -8,6 +8,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -22,8 +23,8 @@ library(gvcAnalyzer)
 
 The **gvcAnalyzer** package implements two complementary methodologies for measuring global value chain (GVC) participation:
 
-1. **BM 2023**: Measuring what matters in value-added trade.
-2. **BM 2025**: Economic consequences of trade and global value chain integration: A measurement perspective
+1. **BM 2023**: Measuring what matters in value-added trade (Bilateral Focus).
+2. **BM 2025**: Economic consequences of trade and global value chain integration (Tripartite & Output Focus).
 
 This vignette demonstrates both frameworks using a four-country, three-sector input–output table. The example includes China, India, Japan, and Rest of World (ROW), each with Primary, Manufacturing, and Service sectors.
 
@@ -33,12 +34,12 @@ Borin, A., & Mancini, M. (2023). Measuring what matters in value-added trade. Ec
 
 Borin, A., Mancini, M., & Taglioni, D. (2025). Economic consequences of trade and global value chain integration: A measurement perspective. The World Bank Economic Review
 
-
 # Data and Setup
 
 ## Toy Multi-Regional Input–Output Table
 
 The package includes a minimal MRIO table for demonstration purposes:
+
 ```{r}
 # Countries and sectors
 bm_toy_countries
@@ -54,6 +55,7 @@ cat("Gross output (X):", length(bm_toy_X), "industries\n")
 ## Building the IO Object
 
 All **gvcAnalyzer** functions operate on a `bm_io` object that contains the structured IO data and derived matrices:
+
 ```{r}
 io <- bm_build_io(
   Z         = bm_toy_Z,
@@ -77,9 +79,9 @@ The `bm_io` object includes:
 - Value-added coefficient vector **v**
 - Country-level domestic Leontief inverses **L**
 
-# BM 2023: Trade-Based GVC Decomposition
+# BM 2023: Detailed Bilateral Decomposition
 
-The BM 2023 framework decomposes gross exports into domestic and foreign value-added components, accounting for double counting from production fragmentation.
+The BM 2023 framework focuses on precise accounting of value-added in bilateral trade, distinguishing between source and sink perspectives.
 
 ## Exporter-Level Decomposition
 
@@ -89,15 +91,13 @@ For each exporting country *s*, gross exports are decomposed into:
 - **FVA_s**: Foreign value added
 - **DDC_s**: Double-counted domestic content
 - **FDC_s**: Double-counted foreign content
+
 ```{r}
 # Single country
-bm_2023_exporter_total(io, "China")
+bm_2023_exporter_total(io, 1) # Using index 1 for China
 
 # All countries
-exporter_totals <- do.call(rbind, lapply(seq_len(io$G), function(g) {
-  bm_2023_exporter_total(io, g)
-}))
-exporter_totals
+bm_2023_exporter_total_all(io)
 ```
 
 ## Bilateral Decomposition
@@ -105,17 +105,23 @@ exporter_totals
 ### Source-Based Perspective
 
 The source-based decomposition tracks value added by its country of origin in bilateral trade flows:
+
 ```{r}
 # Exports from China to India
-bm_2023_bilateral_source(io, "China", "India")
+bm_2023_bilateral_source(io, 1, 2)
 ```
 
 ### Pure Bilateral Flows
 
 The pure decomposition isolates direct bilateral value-added flows, excluding third-country effects:
+
 ```{r}
-bm_2023_bilateral_pure(io, "China", "India")
+bm_2023_bilateral_pure(io, 1, 2)
 ```
+
+# BM 2025: Tripartite & Output Decomposition
+
+The BM 2025 framework introduces the "Tripartite" concept (Forward, Backward, Two-Sided) and extends GVC measurement to the production side.
 
 ## Tripartite GVC Trade Decomposition
 
@@ -125,24 +131,27 @@ The tripartite decomposition classifies bilateral exports into traditional trade
 - **GVC_PF**: Pure-forward GVC trade (domestic value added re-exported by the partner)
 - **GVC_TS**: Two-sided GVC trade (simultaneous use of foreign inputs and re-export)
 - **GVC_PB**: Pure-backward GVC trade (foreign value added in exports)
+
 ```{r}
-# Single bilateral pair
-bm_2023_tripartite_pair(io, "China", "India")
+# Single bilateral pair (China -> India)
+bm_2025_tripartite_trade(io, 1, 2)
 ```
 
 ### Aggregate Trade Components
 
 Summing over all destination countries provides exporter-level GVC trade components:
+
 ```{r}
-trade_comp <- bm_2023_trade_components(io)
+trade_comp <- bm_2025_trade_exporter(io)
 trade_comp
 ```
 
 ### GVC Participation Indicators
 
 From these components, we compute trade-based participation measures:
+
 ```{r}
-trade_meas <- bm_2023_trade_measures(io)
+trade_meas <- bm_2025_trade_measures(io)
 trade_meas
 ```
 
@@ -165,11 +174,12 @@ For each country *s*, gross output is decomposed into:
 - **DomX**: Purely domestic production (value added never crossing borders)
 - **TradX**: Traditional one-crossing trade
 - **GVC_PF_X**: Pure-forward GVC output
-- **GVC_PB_X**: Pure-backward GVC output  
+- **GVC_PB_X**: Pure-backward GVC output
 - **GVC_TSImp**: Two-sided GVC output via imported intermediates
 - **GVC_TSDom**: Two-sided GVC output via domestic intermediates
 - **GVC_TS_X**: Total two-sided GVC output
 - **GVC_X**: Total GVC-related output
+
 ```{r}
 out_comp <- bm_2025_output_components(io)
 out_comp
@@ -180,15 +190,11 @@ The identity holds: **X_total = DomX + TradX + GVC_X**
 ## Output-Based Participation Measures
 
 From the output components, we derive participation indicators analogous to the trade-based measures:
+
 ```{r}
 out_meas <- bm_2025_output_measures(io)
 out_meas
 ```
-
-At the world level, the BM 2025 output-based decomposition satisfies
-the balance condition `sum(GVC_PF_X) = sum(GVC_PB_X)`, mirroring the
-equality between upstream and downstream participation in value-added
-terms.
 
 Key indicators:
 
@@ -199,50 +205,25 @@ Key indicators:
 ## Sector-Level Decomposition
 
 The BM 2025 framework extends to country–sector pairs by proportional allocation based on sectoral output shares:
+
 ```{r}
 out_comp_sec <- bm_2025_output_components_sector(io)
 head(out_comp_sec, 9)
 ```
-
-### Verification of Aggregation
-
-Sectoral components sum to country totals:
-```{r}
-check_agg <- aggregate(
-  cbind(DomX_i, TradX_i, GVC_PF_Xi, GVC_PB_Xi, GVC_TSImp_i, 
-        GVC_TSDom_i, GVC_TS_Xi, GVC_Xi, X_i) ~ country,
-  data = out_comp_sec,
-  FUN = sum
-)
-check_agg[, 1:5]
-out_comp[, c("country", "DomX", "TradX", "GVC_PF_X", "GVC_PB_X")]
-```
-
-### Sector-Level Participation Measures
-```{r}
-out_meas_sec <- bm_2025_output_measures_sector(io)
-head(out_meas_sec[, c("country", "sector", "share_GVC_output_i", "forward_output_i")], 9)
-```
-
-These sector-level indicators enable analysis of:
-
-- Sectoral heterogeneity in GVC participation
-- Cross-country differences within sectors
-- Forward versus backward orientation by sector
 
 # Summary
 
 This vignette introduced the **gvcAnalyzer** package and demonstrated:
 
 1. Construction of the `bm_io` object from multi-regional input–output data
-2. BM 2023 trade-based GVC decomposition at exporter, bilateral, and tripartite levels
-3. BM 2023 trade-based participation indicators
-4. BM 2025 output-based GVC decomposition at country and sector levels
-5. BM 2025 output-based participation indicators and forward/backward orientation
+2. BM 2023 bilateral decompositions for precise accounting
+3. BM 2025 tripartite trade decomposition for GVC roles
+4. BM 2025 output-based decomposition for production-side analysis
 
 For empirical applications, users can replace the toy data with full MRIO tables (e.g., WIOD, OECD-ICIO, ADB-MRIO) following the same workflow.
 
 # Session Information
+
 ```{r}
 sessionInfo()
 ```

@@ -7,12 +7,11 @@
 bm_2023_bilateral_source_all(io)
 }
 \arguments{
-\item{io}{bm_io object}
+\item{io}{A \code{bm_io} object.}
 }
 \value{
-data.frame with one row per exporter-importer pair:
-exporter, importer, DVAsource_sr, DDCsource_sr, FVAsource_sr, FDCsource_sr, EX_sr
+Data frame of source-based decomposition for all pairs.
 }
 \description{
-Applies \code{bm_2023_bilateral_source()} to all ordered pairs (s,r), s ≠ r.
+BM_2023 source-based bilateral decomposition for all pairs
 }

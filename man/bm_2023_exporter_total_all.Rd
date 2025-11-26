@@ -7,12 +7,11 @@
 bm_2023_exporter_total_all(io)
 }
 \arguments{
-\item{io}{bm_io object}
+\item{io}{A \code{bm_io} object.}
 }
 \value{
-data.frame with one row per exporter:
-country, DVA_s, DDC_s, FVA_s, FDC_s, EX_s
+Data frame of exporter totals for all countries.
 }
 \description{
-Applies \code{bm_2023_exporter_total()} to every country in the IO object.
+BM_2023 exporter totals for all countries
 }

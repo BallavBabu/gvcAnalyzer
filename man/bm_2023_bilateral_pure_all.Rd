@@ -7,12 +7,11 @@
 bm_2023_bilateral_pure_all(io)
 }
 \arguments{
-\item{io}{bm_io object}
+\item{io}{A \code{bm_io} object.}
 }
 \value{
-data.frame with one row per exporter-importer pair:
-exporter, importer, DVA_star_sr, DDC_star_sr, FVA_star_sr, FDC_star_sr, EX_sr
+Data frame of pure bilateral decomposition for all pairs.
 }
 \description{
-Applies \code{bm_2023_bilateral_pure()} to all ordered pairs (s,r), s ≠ r.
+BM_2023 pure bilateral (/sr) decomposition for all pairs
 }

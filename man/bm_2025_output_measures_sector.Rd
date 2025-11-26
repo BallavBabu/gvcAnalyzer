@@ -6,6 +6,12 @@
 \usage{
 bm_2025_output_measures_sector(io)
 }
+\arguments{
+\item{io}{A \code{bm_io} object.}
+}
+\value{
+Data frame with sectoral GVC measures.
+}
 \description{
 BM 2025 output participation measures by country and sector
 }

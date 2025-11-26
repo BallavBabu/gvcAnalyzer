@@ -7,14 +7,13 @@
 bm_2023_exporter_total(io, s)
 }
 \arguments{
-\item{io}{bm_io object}
+\item{io}{A \code{bm_io} object.}
 
-\item{s}{exporting country (index or code, e.g. 1 or "China")}
+\item{s}{Exporter country (name or index).}
 }
 \value{
-data.frame with one row for country s
+A data frame with the exporter-total decomposition.
 }
 \description{
-Implements Eq. (4) at the country level:
-u_N × e_s* = DVA_s* + DDC_s* + FVA_s* + FDC_s*
+BM_2023 exporter-perspective decomposition of total exports of s
 }

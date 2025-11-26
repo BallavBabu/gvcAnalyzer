@@ -2,23 +2,18 @@
 % Please edit documentation in R/bm_io.R
 \name{bm_get_e_star}
 \alias{bm_get_e_star}
-\title{Exports from s to all foreign partners by sector (e_s*)}
+\title{Total exports of s to all foreign destinations}
 \usage{
 bm_get_e_star(io, exporter)
 }
 \arguments{
-\item{io}{bm_io object}
+\item{io}{bm_io object.}
 
-\item{exporter}{exporter country (index or name)}
+\item{exporter}{Exporter country (name or index).}
 }
 \value{
-Numeric vector of length N with sectoral exports of s to all foreign partners.
+Numeric vector of total exports.
 }
 \description{
-Computes a length-N vector of total exports from exporter \eqn{s} to all
-foreign partners (intermediate + final), excluding domestic uses:
-\deqn{ e_s^* = \sum_{r \neq s} e_{sr} }
-}
-\details{
-\code{exporter} can be numeric index or country name.
+Total exports of s to all foreign destinations
 }

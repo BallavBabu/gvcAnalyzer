@@ -6,6 +6,12 @@
 \usage{
 bm_2025_output_components(io)
 }
+\arguments{
+\item{io}{A \code{bm_io} object.}
+}
+\value{
+Data frame with output-based GVC components.
+}
 \description{
 BM_2025 output-based GVC components by exporter
 }

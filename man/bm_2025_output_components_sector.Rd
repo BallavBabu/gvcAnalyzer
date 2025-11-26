@@ -6,6 +6,12 @@
 \usage{
 bm_2025_output_components_sector(io)
 }
+\arguments{
+\item{io}{A \code{bm_io} object.}
+}
+\value{
+Data frame with sectoral output components.
+}
 \description{
 BM 2025 output components by country and sector
 }

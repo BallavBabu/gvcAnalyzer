@@ -7,18 +7,11 @@
 bm_2025_trade_exporter(io)
 }
 \arguments{
-\item{io}{bm_io object}
+\item{io}{A \code{bm_io} object.}
 }
 \value{
-data.frame with one row per exporter:
-exporter, E_s, GVC_s, GVC_PF_s, GVC_TS_s, GVC_PB_s.
+Data frame of exporter totals.
 }
 \description{
-Aggregates BM_2025 tripartite trade decomposition over all destinations
-for each exporter s:
-}
-\details{
-\eqn{E_s = sum_r E_{sr}},
-\eqn{GVC_s = sum_r GVC_{sr}},
-and similarly for the PF/TS/PB components.
+BM_2025 exporter-level GVC trade totals
 }

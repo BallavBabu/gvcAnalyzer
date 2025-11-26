@@ -7,25 +7,15 @@
 bm_2023_bilateral_pure(io, s, r)
 }
 \arguments{
-\item{io}{bm_io object as returned by \code{bm_build_io()}}
+\item{io}{A \code{bm_io} object.}
 
-\item{s}{exporter (country index or code)}
+\item{s}{Exporter country (name or index).}
 
-\item{r}{importer (country index or code)}
+\item{r}{Importer country (name or index).}
 }
 \value{
-A data frame with one row for the pair (s,r):
-\itemize{
-\item \code{DVA_star_sr} Domestic VA of s in bilateral exports e_{sr},
-when only the A_{sr} block is cut.
-\item \code{DDC_star_sr} Double-counting term for s in e_{sr}.
-\item \code{FVA_star_sr} Foreign VA in e_{sr}.
-\item \code{FDC_star_sr} Foreign double-counting in e_{sr}.
-\item \code{EX_sr}       Gross exports e_{sr} (scalar).
-}
+A data frame with the pure bilateral value-added decomposition.
 }
 \description{
-Implements the /sr-based decomposition:
-u_N × e_{sr} = DVA_star_sr + DDC_star_sr + FVA_star_sr + FDC_star_sr
-where A^/sr zeros only the bilateral intermediate block A_{sr}.
+BM_2023 pure bilateral decomposition of exports from s to r
 }

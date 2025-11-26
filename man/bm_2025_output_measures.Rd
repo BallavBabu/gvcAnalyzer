@@ -6,6 +6,12 @@
 \usage{
 bm_2025_output_measures(io)
 }
+\arguments{
+\item{io}{A \code{bm_io} object.}
+}
+\value{
+Data frame with output-based GVC participation measures.
+}
 \description{
 BM_2025 output-based GVC participation indicators
 }

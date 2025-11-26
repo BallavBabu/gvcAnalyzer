@@ -1,10 +1,8 @@
 # R/bm_2025_output_sector.R
-#
-# BM 2025 output indicators at country x sector level.
-# FIXED: Calculates GVC components directly at the sectoral level (Ground-Up).
-# This ensures sectors have different GVC intensities.
 
 #' BM 2025 output components by country and sector
+#' @param io A \code{bm_io} object.
+#' @return Data frame with sectoral output components.
 #' @export
 bm_2025_output_components_sector <- function(io) {
   stopifnot(inherits(io, "bm_io"))
@@ -12,23 +10,11 @@ bm_2025_output_components_sector <- function(io) {
   G <- io$G; N <- io$N; GN <- io$GN
   A <- io$A; B <- io$B; Y <- io$Y; X <- io$X; v <- io$v
 
-  # --- Pre-computations ---
-  L_list <- vector("list", G)
-  for (g in seq_len(G)) {
-    idx <- bm_idx_country(io, g)
-    A_gg <- A[idx, idx, drop = FALSE]
-    L_list[[g]] <- solve(Matrix::Diagonal(N) - A_gg)
-  }
+  L_list <- bm_L_list(io)
 
   Xexp_list <- vector("list", G)
   for (r in seq_len(G)) {
-    idx_r <- bm_idx_country(io, r)
-    # Total Exports of r (Intermediate + Final) to all other countries
-    int_exp <- rowSums(io$Z[idx_r, setdiff(seq_len(GN), idx_r), drop = FALSE])
-    fin_exp <- rowSums(io$Y[idx_r, setdiff(seq_len(G), r), drop = FALSE])
-    e_r_star <- int_exp + fin_exp
-
-    # Use Domestic Leontief (L_rr) for Export-Related Output
+    e_r_star <- bm_get_e_star(io, r)
     L_rr <- L_list[[r]]
     Xexp_list[[r]] <- as.numeric(L_rr %*% e_r_star)
   }
@@ -37,9 +23,12 @@ bm_2025_output_components_sector <- function(io) {
 
   for (s in seq_len(G)) {
     idx_s <- bm_idx_country(io, s)
-    v_s_vec <- v[idx_s]; X_s_vec <- X[idx_s]
-    L_ss    <- L_list[[s]]; A_ss <- A[idx_s, idx_s, drop = FALSE]
-    Y_ss    <- Y[idx_s, s]; Y_s_tot <- rowSums(Y[idx_s, , drop = FALSE])
+    v_s_vec <- v[idx_s]
+    X_s_vec <- X[idx_s]
+    L_ss    <- L_list[[s]]
+    A_ss    <- A[idx_s, idx_s, drop = FALSE]
+    Y_ss    <- Y[idx_s, s]
+    Y_s_tot <- rowSums(Y[idx_s, , drop = FALSE])
 
     # 1. PURE FORWARD (PF)
     q_total <- numeric(N)
@@ -53,7 +42,6 @@ bm_2025_output_components_sector <- function(io) {
       inner_u <- A_ss %*% (L_ss %*% inner)
       q_total <- q_total + as.numeric(inner + inner_u)
     }
-    # FIXED: Calculate specific PF for each sector
     PF_vec <- v_s_vec * q_total
 
     # 2. PURE BACKWARD (PB)
@@ -64,22 +52,21 @@ bm_2025_output_components_sector <- function(io) {
       if (j == s) next
       idx_j <- bm_idx_country(io, j)
       v_j   <- v[idx_j]
-      B_js <- B[idx_j, idx_s, drop = FALSE]
+      B_js  <- bm_block(io, B, j, s)
       fva_intensity_total <- fva_intensity_total + as.numeric(t(v_j) %*% B_js)
 
-      L_jj <- L_list[[j]]; A_js <- A[idx_j, idx_s, drop = FALSE]
+      L_jj <- L_list[[j]]
+      A_js <- bm_block(io, A, j, s)
+
       term_1b <- as.numeric(t(v_j) %*% L_jj %*% A_js %*% L_ss)
       fva_intensity_1border <- fva_intensity_1border + term_1b
     }
-    # FIXED: Calculate specific PB for each sector based on its Final Demand
     PB_vec <- (fva_intensity_total * Y_s_tot) - (fva_intensity_1border * Y_ss)
 
     # 3. Two-Sided (TS)
-    # TS_Imp
     TS_Imp_vec <- (fva_intensity_total * X_s_vec) - (fva_intensity_1border * Y_ss) - PB_vec
     TS_Imp_vec[TS_Imp_vec < 0] <- 0
 
-    # TS_Dom
     term_dom <- A_ss %*% q_total
     TS_Dom_vec <- v_s_vec * as.numeric(L_ss %*% term_dom)
 
@@ -91,11 +78,16 @@ bm_2025_output_components_sector <- function(io) {
     TradX_vec <- X_s_vec - DomX_vec - GVC_vec
 
     res_list[[s]] <- data.frame(
-      country      = rep(io$countries[s], N), sector = io$sectors,
-      X_i          = as.numeric(X_s_vec), DomX_i = as.numeric(DomX_vec),
-      TradX_i      = as.numeric(TradX_vec), GVC_PF_Xi = as.numeric(PF_vec),
-      GVC_PB_Xi    = as.numeric(PB_vec), GVC_TSImp_i = as.numeric(TS_Imp_vec),
-      GVC_TSDom_i  = as.numeric(TS_Dom_vec), GVC_TS_Xi = as.numeric(TS_vec),
+      country      = rep(io$countries[s], N),
+      sector       = io$sectors,
+      X_i          = as.numeric(X_s_vec),
+      DomX_i       = as.numeric(DomX_vec),
+      TradX_i      = as.numeric(TradX_vec),
+      GVC_PF_Xi    = as.numeric(PF_vec),
+      GVC_PB_Xi    = as.numeric(PB_vec),
+      GVC_TSImp_i  = as.numeric(TS_Imp_vec),
+      GVC_TSDom_i  = as.numeric(TS_Dom_vec),
+      GVC_TS_Xi    = as.numeric(TS_vec),
       GVC_Xi       = as.numeric(GVC_vec)
     )
   }
@@ -103,6 +95,8 @@ bm_2025_output_components_sector <- function(io) {
 }
 
 #' BM 2025 output participation measures by country and sector
+#' @param io A \code{bm_io} object.
+#' @return Data frame with sectoral GVC measures.
 #' @export
 bm_2025_output_measures_sector <- function(io) {
   stopifnot(inherits(io, "bm_io"))

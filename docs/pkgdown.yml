@@ -1,0 +1,8 @@
+pandoc: 3.6.3
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  bm2023-vs-bm2025: bm2023-vs-bm2025.html
+  bm2025-output-focus: bm2025-output-focus.html
+  gvcAnalyzer-intro: gvcAnalyzer-intro.html
+last_built: 2025-11-25T23:53Z

@@ -7,20 +7,11 @@
 bm_2025_trade_measures(io)
 }
 \arguments{
-\item{io}{bm_io object}
+\item{io}{A \code{bm_io} object.}
 }
 \value{
-data.frame with exporter-level totals and indicator columns.
+Data frame of trade-based indicators.
 }
 \description{
-Computes GVC participation and composition indicators for each exporter:
-}
-\details{
-\itemize{
-\item share_GVC_trade = GVC_s / E_s
-\item share_PF_trade  = GVC_PF_s / GVC_s
-\item share_TS_trade  = GVC_TS_s / GVC_s
-\item share_PB_trade  = GVC_PB_s / GVC_s
-\item forward_trade   = (GVC_PF_s - GVC_PB_s) / GVC_s
-}
+BM_2025 trade-based GVC participation indicators
 }

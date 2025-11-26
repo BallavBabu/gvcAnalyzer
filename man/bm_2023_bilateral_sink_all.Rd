@@ -7,12 +7,11 @@
 bm_2023_bilateral_sink_all(io)
 }
 \arguments{
-\item{io}{bm_io object}
+\item{io}{A \code{bm_io} object.}
 }
 \value{
-data.frame with one row per exporter-importer pair:
-exporter, importer, DVAsink_sr, DDCsink_sr, FVAsink_sr, FDCsink_sr, EX_sr
+Data frame of sink-based decomposition for all pairs.
 }
 \description{
-Applies \code{bm_2023_bilateral_sink()} to all ordered pairs (s,r), s ≠ r.
+BM_2023 sink-based bilateral decomposition for all pairs
 }

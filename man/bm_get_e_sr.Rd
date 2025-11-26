@@ -2,25 +2,20 @@
 % Please edit documentation in R/bm_io.R
 \name{bm_get_e_sr}
 \alias{bm_get_e_sr}
-\title{Exports from s to r by sector (intermediate + final)}
+\title{Exports from s to r (sectoral)}
 \usage{
 bm_get_e_sr(io, exporter, importer)
 }
 \arguments{
-\item{io}{bm_io object}
+\item{io}{bm_io object.}
 
-\item{exporter}{exporter country (index or name)}
+\item{exporter}{Exporter country (name or index).}
 
-\item{importer}{importer country (index or name)}
+\item{importer}{Importer country (name or index).}
 }
 \value{
-Numeric vector of length N with sectoral exports s -> r.
+Numeric vector of exports.
 }
 \description{
-Computes a length-N vector of exports from exporter \eqn{s} to importer \eqn{r},
-summing intermediate and final exports:
-\deqn{ e_{sr} = Z_{s,r} \mathbf{u}_N + Y_{s,r} }
-}
-\details{
-\code{exporter} and \code{importer} can be numeric indices or country names.
+Exports from s to r (sectoral)
 }

@@ -12,6 +12,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -26,8 +27,8 @@ library(gvcAnalyzer)
 
 The **gvcAnalyzer** package implements two complementary frameworks for measuring global value chain (GVC) participation:
 
-1. **BM 2023** (Borin & Mancini, 2023): Trade-based decomposition of gross exports
-2. **BM 2025** (Borin & Mancini, 2025): Output-based decomposition of gross production
+1.  **Trade-Based** (BM 2025 Trade): Decomposition of gross exports.
+2.  **Output-Based** (BM 2025 Output): Decomposition of gross production.
 
 This vignette compares these approaches, demonstrating when each measure is most appropriate and how they provide complementary insights into GVC integration.
 
@@ -39,57 +40,43 @@ Borin, A., & Mancini, M. (2025). Measuring What Matters in Value-Added Trade: An
 
 # Conceptual Framework
 
-## BM 2023: Trade-Based Approach
+## Trade-Based Approach (BM 2025 Tripartite)
 
-The trade-based framework decomposes **gross exports** from country *s* to country *r* into value-added components, distinguishing:
+The trade-based framework decomposes **gross exports** from country *s* to country *r* into GVC components:
 
-- **Domestic value added (DVA)**: Value created in the exporting country
-- **Foreign value added (FVA)**: Value imported from third countries
-- **Double counting (DDC, FDC)**: Value crossing borders multiple times
-
-Exports are further classified by GVC involvement:
-
-- **DAVAX**: Traditional trade (domestic value added absorbed abroad in one crossing)
-- **GVC_PF**: Pure-forward GVC (domestic value added re-exported by the partner)
-- **GVC_TS**: Two-sided GVC (both foreign inputs and re-export linkages)
-- **GVC_PB**: Pure-backward GVC (foreign value added in exports)
+  - **DAVAX**: Traditional trade (domestic value added absorbed abroad in one crossing)
+  - **GVC\_PF**: Pure-forward GVC (domestic value added re-exported by the partner)
+  - **GVC\_TS**: Two-sided GVC (both foreign inputs and re-export linkages)
+  - **GVC\_PB**: Pure-backward GVC (foreign value added in exports)
 
 **Key feature**: Measures how much of a country's **exports** participate in GVCs.
 
-## BM 2025: Output-Based Approach
+## Output-Based Approach (BM 2025 Output)
 
 The output-based framework decomposes **gross output** of country *s* into production components:
 
-- **DomX**: Purely domestic production (value never crossing borders)
-- **TradX**: Traditional one-crossing trade
-- **GVC_PF_X**: Pure-forward GVC-related output
-- **GVC_TS_X**: Two-sided GVC-related output
-- **GVC_PB_X**: Pure-backward GVC-related output
+  - **DomX**: Purely domestic production (value never crossing borders)
+  - **TradX**: Traditional one-crossing trade
+  - **GVC\_PF\_X**: Pure-forward GVC-related output
+  - **GVC\_TS\_X**: Two-sided GVC-related output
+  - **GVC\_PB\_X**: Pure-backward GVC-related output
 
 **Key feature**: Measures how much of a country's **production** is GVC-related, regardless of export destination.
 
 ## Fundamental Differences
 
-| Dimension | BM 2023 (Trade-Based) | BM 2025 (Output-Based) |
+| Dimension | Trade-Based | Output-Based |
 |-----------|----------------------|----------------------|
 | **Unit of analysis** | Gross exports | Gross output |
 | **Focus** | Border-crossing flows | Production structure |
 | **Scope** | Export transactions | Total production |
 | **Captures** | Export intensity in GVCs | Comprehensive GVC involvement |
 | **Best for** | Trade policy analysis | Industrial policy analysis |
-| **Missing** | Domestic use of GVC inputs | Export-destination composition |
-
-A country can exhibit high GVC participation in **output** but moderate participation in **trade** if it:
-- Uses foreign intermediates for domestic final consumption
-- Supplies intermediates that are re-exported by partners but not directly exported itself
-
-Conversely, high trade-based participation with moderate output-based participation suggests:
-- Concentration of GVC activities in export-oriented sectors
-- Limited domestic use of GVC production
 
 # Empirical Comparison
 
 ## Data and Setup
+
 ```{r}
 io <- bm_build_io(
   Z         = bm_toy_Z,
@@ -103,20 +90,18 @@ io <- bm_build_io(
 
 ## Computing Both Frameworks
 
-### BM 2023 Trade-Based Measures
-```{r}
-trade_comp <- bm_2023_trade_components(io)
-trade_meas <- bm_2023_trade_measures(io)
+### Trade-Based Measures
 
+```{r}
+trade_meas <- bm_2025_trade_measures(io)
 trade_meas[, c("exporter", "share_GVC_trade", "share_PF_trade", 
                "share_TS_trade", "share_PB_trade", "forward_trade")]
 ```
 
-### BM 2025 Output-Based Measures
-```{r}
-out_comp <- bm_2025_output_components(io)
-out_meas <- bm_2025_output_measures(io)
+### Output-Based Measures
 
+```{r}
+out_meas <- bm_2025_output_measures(io)
 out_meas[, c("country", "share_GVC_output", "share_PF_output", 
              "share_TS_output", "share_PB_output", "forward_output")]
 ```
@@ -124,29 +109,29 @@ out_meas[, c("country", "share_GVC_output", "share_PF_output",
 ## Direct Comparison
 
 To compare the two frameworks, we merge the key indicators:
+
 ```{r}
 # Standardize column names
 trade_meas$country <- trade_meas$exporter
-
 comparison <- merge(
   trade_meas[, c("country", "share_GVC_trade", "forward_trade")],
   out_meas[, c("country", "share_GVC_output", "forward_output")],
   by = "country"
 )
-
 comparison
 ```
 
 ### Interpretation
 
-- **share_GVC_trade**: Share of exports in GVCs
-- **share_GVC_output**: Share of production in GVCs
-- **forward_trade**: Export-based forward orientation (positive = upstream supplier)
-- **forward_output**: Production-based forward orientation
+  - **share\_GVC\_trade**: Share of exports in GVCs
+  - **share\_GVC\_output**: Share of production in GVCs
+  - **forward\_trade**: Export-based forward orientation (positive = upstream supplier)
+  - **forward\_output**: Production-based forward orientation
 
 # Visualization
 
 ## GVC Participation: Trade vs Output
+
 ```{r}
 par(mar = c(5, 5, 3, 2))
 plot(
@@ -155,8 +140,8 @@ plot(
   pch = 19,
   col = "darkblue",
   cex = 1.5,
-  xlab = "GVC Share of Exports (BM 2023)",
-  ylab = "GVC Share of Output (BM 2025)",
+  xlab = "GVC Share of Exports (Trade)",
+  ylab = "GVC Share of Output (Output)",
   main = "Trade-Based vs Output-Based GVC Participation",
   xlim = c(0, max(comparison$share_GVC_trade, comparison$share_GVC_output, na.rm = TRUE) * 1.1),
   ylim = c(0, max(comparison$share_GVC_trade, comparison$share_GVC_output, na.rm = TRUE) * 1.1)
@@ -172,12 +157,8 @@ abline(a = 0, b = 1, lty = 2, col = "gray", lwd = 2)
 grid()
 ```
 
-**Interpretation**:
-- Points on the 45° line: Similar GVC intensity in exports and production
-- Points above the line: Higher output-based participation (GVC production for domestic use)
-- Points below the line: Higher trade-based participation (export-oriented GVC activities)
-
 ## Forward Orientation: Trade vs Output
+
 ```{r}
 par(mar = c(5, 5, 3, 2))
 plot(
@@ -186,8 +167,8 @@ plot(
   pch = 19,
   col = "darkgreen",
   cex = 1.5,
-  xlab = "Forward Index - Exports (BM 2023)",
-  ylab = "Forward Index - Output (BM 2025)",
+  xlab = "Forward Index - Exports",
+  ylab = "Forward Index - Output",
   main = "Forward Orientation: Trade vs Production Perspective",
   xlim = c(-1, 1),
   ylim = c(-1, 1)
@@ -204,144 +185,18 @@ abline(a = 0, b = 1, lty = 2, col = "red", lwd = 2)
 grid()
 ```
 
-**Quadrant interpretation**:
-- **Top-right**: Forward-oriented in both exports and production (upstream suppliers)
-- **Bottom-left**: Backward-oriented in both (downstream assemblers)
-- **Top-left**: More forward in production than in exports (domestic supply of intermediates)
-- **Bottom-right**: More forward in exports than in production (export of intermediates, import for assembly)
-
-## Sectoral GVC Participation (Output-Based)
-```{r}
-out_meas_sec <- bm_2025_output_measures_sector(io)
-
-sec_avg <- aggregate(
-  share_GVC_output_i ~ sector,
-  data = out_meas_sec,
-  FUN = mean
-)
-
-par(mar = c(5, 4, 3, 2))
-barplot(
-  height = sec_avg$share_GVC_output_i,
-  names.arg = sec_avg$sector,
-  col = "coral",
-  ylab = "Average GVC Share of Output",
-  main = "Sectoral GVC Participation (BM 2025, Cross-Country Average)",
-  las = 2,
-  ylim = c(0, max(sec_avg$share_GVC_output_i) * 1.2)
-)
-grid(nx = NA, ny = NULL)
-```
-
-This sectoral view is only available through the output-based approach, revealing heterogeneity not captured by aggregate trade statistics.
-
-# When to Use Each Framework
-
-## Use BM 2023 (Trade-Based) For:
-
-1. **Export competitiveness analysis**: Understanding value creation in export activities
-2. **Trade policy evaluation**: Assessing impacts of tariffs, trade agreements on value-added flows
-3. **Bilateral trade relationships**: Decomposing value-added flows between trading partners
-4. **Export-oriented sector analysis**: Identifying GVC roles in internationally competitive industries
-
-**Strengths**:
-- Directly links to trade flows and competitiveness
-- Enables bilateral decomposition of value-added trade
-- Well-suited for analyzing export-led growth strategies
-
-**Limitations**:
-- Misses domestic use of imported intermediates
-- Excludes sectors producing primarily for domestic markets
-- May understate GVC participation if production serves domestic final demand
-
-## Use BM 2025 (Output-Based) For:
-
-1. **Industrial structure analysis**: Understanding production patterns across all sectors
-2. **Comprehensive GVC assessment**: Capturing total engagement regardless of export intensity
-3. **Sectoral specialization**: Analyzing forward/backward positioning at granular levels
-4. **Supply chain resilience**: Assessing vulnerability through import dependence
-
-**Strengths**:
-- Comprehensive measure of GVC participation in production
-- Enables detailed sector-level analysis
-- Captures domestic market GVC activities
-- Better reflects production structure transformation
-
-**Limitations**:
-- Does not distinguish by export destination
-- Less directly linked to international competitiveness
-- May overstate participation if domestic use dominates
-
-## Use Both Frameworks When:
-
-1. **Conducting comprehensive GVC research**: Combining trade and production perspectives
-2. **Policy design**: Balancing export promotion with domestic value creation
-3. **Structural analysis**: Understanding discrepancies between export and production patterns
-4. **Time-series analysis**: Tracking evolution of GVC roles from multiple angles
-
-# Methodological Insights
-
-## Why Measures Differ
-
-Consider a country that:
-1. Imports intermediates from country A
-2. Uses them to produce goods for domestic final consumption
-
-**BM 2023 (trade)**: No GVC participation (no exports)  
-**BM 2025 (output)**: High pure-backward GVC participation (foreign inputs in production)
-
-Now consider a country that:
-1. Produces intermediates using domestic inputs only
-2. Exports them to country B
-3. Country B re-exports to country C
-
-**BM 2023 (trade)**: High pure-forward GVC participation (re-exported by B)  
-**BM 2025 (output)**: Forward participation in output that serves B's exports
-
-Both measures are correct but capture different dimensions of GVC integration.
-
-## Complementarity
-
-The frameworks are **complementary**, not substitutes:
-
-- **BM 2023** reveals how countries participate in GVCs through international trade
-- **BM 2025** reveals how production structures are organized around GVCs
-
-Together, they provide a complete picture:
-- High trade participation + low output participation → Export-oriented GVC enclaves
-- Low trade participation + high output participation → Domestic market GVC integration
-- High in both → Comprehensive GVC integration across domestic and export markets
-- Low in both → Limited GVC engagement overall
-
 # Summary
 
-This vignette demonstrated:
+This vignette demonstrated the **complementarity** of trade-based and output-based GVC measures.
 
-1. **Conceptual differences** between trade-based (BM 2023) and output-based (BM 2025) GVC measures
-2. **Parallel computation** of both frameworks using **gvcAnalyzer**
-3. **Visualization techniques** for comparing trade and output perspectives
-4. **Interpretation guidelines** for discrepancies between the two approaches
-5. **Decision framework** for selecting appropriate measures based on research objectives
-
-## Key Takeaways
-
-An additional consistency property of the BM 2025 output-based
-framework is that, at the world level, pure-forward and pure-backward
-GVC output are equal when summed over all countries
-(`sum(GVC_PF_X) = sum(GVC_PB_X)`). This mirrors the global balance
-between upstream and downstream roles in value-added terms.
-
-
-
-- BM 2023 focuses on **border-crossing flows**; BM 2025 on **production structure**
-- Differences arise from domestic use of GVC inputs and export destination composition
-- **Trade-based measures** are ideal for export competitiveness and trade policy
-- **Output-based measures** are ideal for industrial policy and sectoral analysis
-- **Both together** provide the most comprehensive assessment of GVC integration
+  - **Trade-based measures** are ideal for export competitiveness and trade policy.
+  - **Output-based measures** are ideal for industrial policy and sectoral analysis.
+  - **Both together** provide the most comprehensive assessment of GVC integration.
 
 For robust empirical research on global value chains, we recommend computing both frameworks and interpreting results in light of their complementary strengths.
 
 # Session Information
+
 ```{r}
 sessionInfo()
 ```

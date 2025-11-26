@@ -7,13 +7,11 @@
 bm_2025_tripartite_trade_all(io)
 }
 \arguments{
-\item{io}{bm_io object}
+\item{io}{A \code{bm_io} object.}
 }
 \value{
-data.frame with one row per exporter-importer pair:
-exporter, importer, E_sr, DAVAX_sr, GVC_sr, GVC_PF, GVC_TS, GVC_PB.
+Data frame for all pairs.
 }
 \description{
-Applies \code{bm_2025_tripartite_trade()} to all ordered pairs
-(s,r), s ≠ r.
+BM_2025 tripartite GVC trade decomposition for all pairs
 }

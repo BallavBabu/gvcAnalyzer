@@ -16,16 +16,11 @@ Authors@R: c(
     person("Daria", "Taglioni",
       role = "ctb",
       comment = "Methodology: Borin, Mancini and Taglioni (2025)"))
-Description: Tools for decomposing global value chain (GVC) participation and
-    value-added trade using the frameworks proposed in Borin and Mancini
-    "Measuring what matters in value-added trade"
-    (Economic Systems Research, 35(4), 586-613, 2023,
-    10.1080/09535314.2022.2153221>) and in Borin, Mancini and
-    Taglioni "Economic Consequences of Trade and Global Value Chain
-    Integration: A Measurement Perspective" (The World Bank Economic
-    Review, 2025, 10.1093/wber/lhaf017>). The package provides
-    functions to compute value-added trade measures and decompositions
-    that follow these frameworks.
+Description: Provides tools for decomposing Global Value Chain (GVC) participation 
+    and value-added trade. It implements the frameworks proposed by Borin and 
+    Mancini (2023) 10.1080/09535314.2022.2153221> for source-based and 
+    sink-based decompositions, and by Borin, Mancini, and Taglioni (2025) 
+    10.1093/wber/lhaf017> for tripartite and output-based GVC measures.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -41,5 +36,5 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
+RoxygenNote: 7.3.2
 Config/testthat/edition: 3

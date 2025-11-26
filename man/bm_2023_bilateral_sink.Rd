@@ -7,33 +7,15 @@
 bm_2023_bilateral_sink(io, s, r)
 }
 \arguments{
-\item{io}{bm_io object as returned by \code{bm_build_io()}}
+\item{io}{A \code{bm_io} object.}
 
-\item{s}{exporter (country index or code, e.g. 1 or "China")}
+\item{s}{Exporter country (name or index).}
 
-\item{r}{importer (country index or code, e.g. 2 or "India")}
+\item{r}{Importer country (name or index).}
 }
 \value{
-A data frame with one row for the pair (s,r):
-\itemize{
-\item \code{DVAsink_sr} Domestic VA of s in e_{sr} that is finally
-absorbed somewhere in the world as ultimate final demand.
-\item \code{DDCsink_sr} Double-counting associated with s in e_{sr}
-due to the circulation of s's exports along GVC chains.
-\item \code{FVAsink_sr} Foreign VA in e_{sr} from t ≠ s.
-\item \code{FDCsink_sr} Foreign double-counting in e_{sr}.
-\item \code{EX_sr}      Gross exports e_{sr} (scalar).
-}
+A data frame with the sink-based value-added decomposition.
 }
 \description{
-Decomposes gross exports e_{sr} (from exporter s to importer r) from the
-importer (sink) perspective using the BM_2023 /s formulation:
-}
-\details{
-u_N × e_{sr} = DVAsink_sr + DDCsink_sr + FVAsink_sr + FDCsink_sr
-
-where the split between \eqn{e^{(s/ \to y^*)}_{sr}} (ultimate shipments)
-and \eqn{e^{(\to e_s^*)}_{sr}} (re-exports of s's exports) follows
-Equations (12)–(13) in BM_2023, constructed with the exporter-based
-slash matrix A^/s (and B^/s).
+BM_2023 sink-based bilateral decomposition of exports from s to r
 }
