@@ -1,7 +1,7 @@
 Package: gvcAnalyzer
 Type: Package
 Title: Global Value Chain Decomposition for Value-Added Trade
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Lila Ballav", "Bhusal",
       email = "krish.bhula@gmail.com",
@@ -36,5 +36,5 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Config/testthat/edition: 3
