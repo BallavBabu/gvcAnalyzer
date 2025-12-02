@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
   fig.width = 7,
   fig.height = 5
 )
+
 library(gvcAnalyzer)
 ```
 
@@ -37,14 +38,21 @@ Borin, A., Mancini, M., & Taglioni, D. (2025). Economic consequences of trade an
 
 The BM 2025 output decomposition classifies gross output of country *s* into:
 
-1.  **DomX**: Purely domestic production (value added never crosses borders)
-2.  **TradX**: Traditional one-crossing trade
-3.  **GVC\_PF\_X**: Pure-forward GVC output (intermediates for foreign production)
-4.  **GVC\_PB\_X**: Pure-backward GVC output (using foreign intermediates)
-5.  **GVC\_TSImp**: Two-sided GVC output via imported intermediates
-6.  **GVC\_TSDom**: Two-sided GVC output via domestic intermediates
-7.  **GVC\_TS\_X**: Total two-sided GVC output (TSImp + TSDom)
-8.  **GVC\_X**: Total GVC-related output (PF + PB + TS)
+1. **DomX**: Purely domestic production (value added never crosses borders)
+
+2. **TradX**: Traditional one-crossing trade
+
+3. **GVC\_PF\_X**: Pure-forward GVC output (intermediates for foreign production)
+
+4. **GVC\_PB\_X**: Pure-backward GVC output (using foreign intermediates)
+
+5. **GVC\_TSImp**: Two-sided GVC output via imported intermediates
+
+6. **GVC\_TSDom**: Two-sided GVC output via domestic intermediates
+
+7. **GVC\_TS\_X**: Total two-sided GVC output (TSImp + TSDom)
+
+8. **GVC\_X**: Total GVC-related output (PF + PB + TS)
 
 The fundamental identity: **X\_total = DomX + TradX + GVC\_X**.
 
@@ -52,21 +60,24 @@ The fundamental identity: **X\_total = DomX + TradX + GVC\_X**.
 
 The output-based approach:
 
-  - Captures GVC involvement regardless of export destination
-  - Provides production-side perspective complementary to trade flows
-  - Enables sector-level analysis of GVC integration
-  - Supports industrial policy analysis
+- Captures GVC involvement regardless of export destination
+
+- Provides production-side perspective complementary to trade flows
+
+- Enables sector-level analysis of GVC integration
+
+- Supports industrial policy analysis
 
 # Data and Setup
 
 ```{r}
 io <- bm_build_io(
-  Z         = bm_toy_Z,
-  Y         = bm_toy_Y,
-  VA        = bm_toy_VA,
-  X         = bm_toy_X,
+  Z = bm_toy_Z,
+  Y = bm_toy_Y,
+  VA = bm_toy_VA,
+  X = bm_toy_X,
   countries = bm_toy_countries,
-  sectors   = bm_toy_sectors
+  sectors = bm_toy_sectors
 )
 ```
 
@@ -83,12 +94,17 @@ out_comp
 
 Each row represents a country's gross output decomposition:
 
-  - **X\_total**: Total gross output
-  - **DomX**: Production for domestic final use only
-  - **TradX**: Production for traditional one-crossing trade
-  - **GVC\_PF\_X**: Production for foreign intermediate use (upstream)
-  - **GVC\_PB\_X**: Production using foreign intermediates (downstream)
-  - **GVC\_TS\_X**: Production with both foreign inputs and re-export linkages
+- **X\_total**: Total gross output
+
+- **DomX**: Production for domestic final use only
+
+- **TradX**: Production for traditional one-crossing trade
+
+- **GVC\_PF\_X**: Production for foreign intermediate use (upstream)
+
+- **GVC\_PB\_X**: Production using foreign intermediates (downstream)
+
+- **GVC\_TS\_X**: Production with both foreign inputs and re-export linkages
 
 ## Output-Based Participation Measures
 
@@ -101,9 +117,11 @@ out_meas
 
 Key indicators:
 
-  - **share\_GVC\_output**: GVC-related output as a share of total output
-  - **share\_PF\_output**, **share\_TS\_output**, **share\_PB\_output**: Composition of GVC output
-  - **forward\_output**: Output-based forward orientation index
+- **share\_GVC\_output**: GVC-related output as a share of total output
+
+- **share\_PF\_output**, **share\_TS\_output**, **share\_PB\_output**: Composition of GVC output
+
+- **forward\_output**: Output-based forward orientation index
 
 # Sector-Level Output Decomposition
 
@@ -113,7 +131,6 @@ The BM 2025 framework extends to country–sector pairs:
 # Compute sectoral components and measures
 out_comp_sec <- bm_2025_output_components_sector(io)
 out_meas_sec <- bm_2025_output_measures_sector(io)
-
 head(out_meas_sec, 12)
 ```
 
@@ -134,7 +151,8 @@ manufacturing[, cols_to_show]
 ## GVC Participation by Country
 
 ```{r}
-par(mar = c(5, 5, 3, 2))
+oldpar <- par(mar = c(5, 5, 3, 2))
+
 barplot(
   out_meas$share_GVC_output,
   names.arg = out_meas$country,
@@ -143,13 +161,17 @@ barplot(
   main = "Output-Based GVC Participation",
   ylim = c(0, max(out_meas$share_GVC_output, na.rm = TRUE) * 1.2)
 )
+
 grid()
+
+par(oldpar)
 ```
 
 ## GVC Composition
 
 ```{r}
-par(mar = c(5, 5, 3, 2))
+oldpar <- par(mar = c(5, 5, 3, 2))
+
 composition <- as.matrix(out_meas[, c("share_PF_output", "share_TS_output", "share_PB_output")])
 rownames(composition) <- out_meas$country
 
@@ -162,13 +184,17 @@ barplot(
   legend.text = c("Pure-Forward", "Two-Sided", "Pure-Backward"),
   args.legend = list(x = "topright", bty = "n")
 )
+
 grid()
+
+par(oldpar)
 ```
 
 ## Forward Orientation
 
 ```{r}
-par(mar = c(5, 5, 3, 2))
+oldpar <- par(mar = c(5, 5, 3, 2))
+
 barplot(
   out_meas$forward_output,
   names.arg = out_meas$country,
@@ -177,8 +203,12 @@ barplot(
   main = "Output-Based Forward Orientation",
   ylim = c(-1, 1)
 )
+
 abline(h = 0, lty = 2, col = "gray", lwd = 2)
+
 grid()
+
+par(oldpar)
 ```
 
 # Comparison: Country vs Sector Level
@@ -203,6 +233,7 @@ comparison <- merge(
   by = "country",
   suffixes = c("_direct", "_sectoral")
 )
+
 comparison
 ```
 
@@ -212,10 +243,13 @@ The sector-level aggregation matches the direct country-level calculation, confi
 
 This vignette demonstrated the BM 2025 output-based GVC decomposition:
 
-1.  Country-level output components and participation measures
-2.  Sector-level decomposition for detailed industrial analysis
-3.  Visualization of GVC participation and orientation
-4.  Consistency between country and sector aggregation
+1. Country-level output components and participation measures
+
+2. Sector-level decomposition for detailed industrial analysis
+
+3. Visualization of GVC participation and orientation
+
+4. Consistency between country and sector aggregation
 
 The output-based approach provides a comprehensive view of GVC integration from the production side, complementing trade-based measures for robust GVC analysis.
 

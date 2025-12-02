@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
   fig.width = 7,
   fig.height = 5
 )
+
 library(gvcAnalyzer)
 ```
 
@@ -27,8 +28,9 @@ library(gvcAnalyzer)
 
 The **gvcAnalyzer** package implements two complementary frameworks for measuring global value chain (GVC) participation:
 
-1.  **Trade-Based** (BM 2025 Trade): Decomposition of gross exports.
-2.  **Output-Based** (BM 2025 Output): Decomposition of gross production.
+1. **Trade-Based** (BM 2025 Trade): Decomposition of gross exports.
+
+2. **Output-Based** (BM 2025 Output): Decomposition of gross production.
 
 This vignette compares these approaches, demonstrating when each measure is most appropriate and how they provide complementary insights into GVC integration.
 
@@ -44,10 +46,13 @@ Borin, A., & Mancini, M. (2025). Measuring What Matters in Value-Added Trade: An
 
 The trade-based framework decomposes **gross exports** from country *s* to country *r* into GVC components:
 
-  - **DAVAX**: Traditional trade (domestic value added absorbed abroad in one crossing)
-  - **GVC\_PF**: Pure-forward GVC (domestic value added re-exported by the partner)
-  - **GVC\_TS**: Two-sided GVC (both foreign inputs and re-export linkages)
-  - **GVC\_PB**: Pure-backward GVC (foreign value added in exports)
+- **DAVAX**: Traditional trade (domestic value added absorbed abroad in one crossing)
+
+- **GVC\_PF**: Pure-forward GVC (domestic value added re-exported by the partner)
+
+- **GVC\_TS**: Two-sided GVC (both foreign inputs and re-export linkages)
+
+- **GVC\_PB**: Pure-backward GVC (foreign value added in exports)
 
 **Key feature**: Measures how much of a country's **exports** participate in GVCs.
 
@@ -55,11 +60,15 @@ The trade-based framework decomposes **gross exports** from country *s* to count
 
 The output-based framework decomposes **gross output** of country *s* into production components:
 
-  - **DomX**: Purely domestic production (value never crossing borders)
-  - **TradX**: Traditional one-crossing trade
-  - **GVC\_PF\_X**: Pure-forward GVC-related output
-  - **GVC\_TS\_X**: Two-sided GVC-related output
-  - **GVC\_PB\_X**: Pure-backward GVC-related output
+- **DomX**: Purely domestic production (value never crossing borders)
+
+- **TradX**: Traditional one-crossing trade
+
+- **GVC\_PF\_X**: Pure-forward GVC-related output
+
+- **GVC\_TS\_X**: Two-sided GVC-related output
+
+- **GVC\_PB\_X**: Pure-backward GVC-related output
 
 **Key feature**: Measures how much of a country's **production** is GVC-related, regardless of export destination.
 
@@ -79,12 +88,12 @@ The output-based framework decomposes **gross output** of country *s* into produ
 
 ```{r}
 io <- bm_build_io(
-  Z         = bm_toy_Z,
-  Y         = bm_toy_Y,
-  VA        = bm_toy_VA,
-  X         = bm_toy_X,
+  Z = bm_toy_Z,
+  Y = bm_toy_Y,
+  VA = bm_toy_VA,
+  X = bm_toy_X,
   countries = bm_toy_countries,
-  sectors   = bm_toy_sectors
+  sectors = bm_toy_sectors
 )
 ```
 
@@ -94,7 +103,7 @@ io <- bm_build_io(
 
 ```{r}
 trade_meas <- bm_2025_trade_measures(io)
-trade_meas[, c("exporter", "share_GVC_trade", "share_PF_trade", 
+trade_meas[, c("exporter", "share_GVC_trade", "share_PF_trade",
                "share_TS_trade", "share_PB_trade", "forward_trade")]
 ```
 
@@ -102,7 +111,7 @@ trade_meas[, c("exporter", "share_GVC_trade", "share_PF_trade",
 
 ```{r}
 out_meas <- bm_2025_output_measures(io)
-out_meas[, c("country", "share_GVC_output", "share_PF_output", 
+out_meas[, c("country", "share_GVC_output", "share_PF_output",
              "share_TS_output", "share_PB_output", "forward_output")]
 ```
 
@@ -113,27 +122,33 @@ To compare the two frameworks, we merge the key indicators:
 ```{r}
 # Standardize column names
 trade_meas$country <- trade_meas$exporter
+
 comparison <- merge(
   trade_meas[, c("country", "share_GVC_trade", "forward_trade")],
   out_meas[, c("country", "share_GVC_output", "forward_output")],
   by = "country"
 )
+
 comparison
 ```
 
 ### Interpretation
 
-  - **share\_GVC\_trade**: Share of exports in GVCs
-  - **share\_GVC\_output**: Share of production in GVCs
-  - **forward\_trade**: Export-based forward orientation (positive = upstream supplier)
-  - **forward\_output**: Production-based forward orientation
+- **share\_GVC\_trade**: Share of exports in GVCs
+
+- **share\_GVC\_output**: Share of production in GVCs
+
+- **forward\_trade**: Export-based forward orientation (positive = upstream supplier)
+
+- **forward\_output**: Production-based forward orientation
 
 # Visualization
 
 ## GVC Participation: Trade vs Output
 
 ```{r}
-par(mar = c(5, 5, 3, 2))
+oldpar <- par(mar = c(5, 5, 3, 2))
+
 plot(
   comparison$share_GVC_trade,
   comparison$share_GVC_output,
@@ -146,6 +161,7 @@ plot(
   xlim = c(0, max(comparison$share_GVC_trade, comparison$share_GVC_output, na.rm = TRUE) * 1.1),
   ylim = c(0, max(comparison$share_GVC_trade, comparison$share_GVC_output, na.rm = TRUE) * 1.1)
 )
+
 text(
   comparison$share_GVC_trade,
   comparison$share_GVC_output,
@@ -153,14 +169,19 @@ text(
   pos = 3,
   cex = 0.8
 )
+
 abline(a = 0, b = 1, lty = 2, col = "gray", lwd = 2)
+
 grid()
+
+par(oldpar)
 ```
 
 ## Forward Orientation: Trade vs Output
 
 ```{r}
-par(mar = c(5, 5, 3, 2))
+oldpar <- par(mar = c(5, 5, 3, 2))
+
 plot(
   comparison$forward_trade,
   comparison$forward_output,
@@ -173,6 +194,7 @@ plot(
   xlim = c(-1, 1),
   ylim = c(-1, 1)
 )
+
 text(
   comparison$forward_trade,
   comparison$forward_output,
@@ -180,18 +202,25 @@ text(
   pos = 3,
   cex = 0.8
 )
+
 abline(h = 0, v = 0, lty = 2, col = "gray")
+
 abline(a = 0, b = 1, lty = 2, col = "red", lwd = 2)
+
 grid()
+
+par(oldpar)
 ```
 
 # Summary
 
 This vignette demonstrated the **complementarity** of trade-based and output-based GVC measures.
 
-  - **Trade-based measures** are ideal for export competitiveness and trade policy.
-  - **Output-based measures** are ideal for industrial policy and sectoral analysis.
-  - **Both together** provide the most comprehensive assessment of GVC integration.
+- **Trade-based measures** are ideal for export competitiveness and trade policy.
+
+- **Output-based measures** are ideal for industrial policy and sectoral analysis.
+
+- **Both together** provide the most comprehensive assessment of GVC integration.
 
 For robust empirical research on global value chains, we recommend computing both frameworks and interpreting results in light of their complementary strengths.
 
